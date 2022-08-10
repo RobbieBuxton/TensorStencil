@@ -28,31 +28,31 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 	int n = data->order;
 	int w = stencil->order;
 	int dim = stencil->dimension;
-	stencil->tensors = malloc(sizeof(struct tensor) * dim);
-	struct tensor *temp_tensor;
+	stencil->tensors = malloc(sizeof(struct tensor*)*dim);
 
 	int start_row;
 	int finish_row;
+	// for a 3 wide it's 1, for a 5 wide it's 2 ect. 
+	int stencil_rad = (w-1)/2;
 	for (int k = 0; k < dim; k++)
 	{
-		temp_tensor = init_tensor(2, n);
+		stencil->tensors[k] = init_tensor(2, n);
 		for (int i = 0; i < w; i++)
 		{
-			if (i <= (w-1)/2) {
-				start_row = ((w-1)/2) - i;
-				finish_row = n-1;
+			start_row = 0;
+			finish_row = n;
+			if ((i - stencil_rad) < 0) {
+				start_row = stencil_rad - i;
 			} 
-			if (i >= (w+1)/2) {
-				start_row = 0;
-				finish_row = (n-1) - ((w-1)/2 - i);
+			if ((i - stencil_rad) > 0) {
+				finish_row = n - (i - stencil_rad);
 			} 
-
-			for (int j = start_row; j <= finish_row; j++)
+			// printf("Val %f, Start row: %d, finish row: %d\n",stencil->axis[w*k + i],start_row,finish_row);
+			for (int j = start_row; j < finish_row; j++)
 			{
-				temp_tensor->array[(j*n+j) - i] = stencil->axis[w*k + i];
+				(stencil->tensors[k])->array[(j*n+j) + i - stencil_rad] = stencil->axis[w*k + i];
 			}
 		}
-		// Set tensor 
 	}
 }
 
