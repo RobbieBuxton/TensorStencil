@@ -26,6 +26,12 @@ void print_tensor(struct tensor *tensor)
 	}
 	switch (tensor->dimension)
 	{
+	case 0: 
+		printf("| ");
+		float_print(tensor->array[0]);
+		printf("|\n\n");
+		;
+		break;
 	case 1:
 		printf("| ");
 		for (int i = 0; i < n; i++)
@@ -75,7 +81,7 @@ void print_tensor(struct tensor *tensor)
 		break;
 
 	default:
-		printf("Error: printing in this tensor dimension is not supported\n");
+		error_print("printing in this tensor dimension is not supported\n");
 		break;
 	}
 }

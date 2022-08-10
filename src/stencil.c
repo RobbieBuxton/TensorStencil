@@ -22,7 +22,7 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 
 	if (stencil->dimension != data->dimension)
 	{
-		printf("Error: Stencil and data dimension are not equal\n");
+		error_print("stencil and data dimension are not equal\n");
 	}
 
 	int n = data->order;
