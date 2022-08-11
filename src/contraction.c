@@ -26,18 +26,18 @@ struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct t
 	for (int i = 0; i < pow(n, new_dimension); i++)
 	{
 		result->array[i] = contract_dimension(
-				&tensor_a->array[gen_index(n, index_a, i)],
+				&tensor_a->array[gen_index(n, index_a, i / (int) pow(n,tensor_b->dimension-1))],
 				a_spacing,
-				&tensor_b->array[gen_index(n, index_b, i)],
+				&tensor_b->array[gen_index(n, index_b, i % (int) pow(n,tensor_b->dimension-1))],
 				b_spacing,
 				n);
 	}
 	return result;
 }
 
-int gen_index(int order, int index, int i)
+int gen_index(int n, int index, int i)
 {
-	return 0; //Todo
+	return i%((int) pow(n,index-1)) + (i/(int) pow(n,index-1))*(int) pow(n,index);
 }
 
 float contract_dimension(float *start_a, int spacing_a, float *start_b, int spacing_b, int n)
@@ -45,9 +45,7 @@ float contract_dimension(float *start_a, int spacing_a, float *start_b, int spac
 	float result = 0;
 	for (int i = 0; i < n; i++)
 	{
-		printf("%f * %f + ", start_a[i * spacing_a], start_b[i * spacing_b]);
 		result += start_a[i * spacing_a] * start_b[i * spacing_b];
 	}
-	printf("\n");
 	return result;
 }
