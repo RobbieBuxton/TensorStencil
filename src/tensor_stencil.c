@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
 
 	struct tensor *starting_tensor = init_tensor(dimension, data_order);
 
+	//Initing the starting data to arb thing
 	for (int i = 0; i < pow(data_order, dimension); i++)
 	{
 		starting_tensor->array[i] = 1.0;
@@ -28,7 +29,10 @@ int main(int argc, char *argv[])
 	starting_tensor->array[data_order + 2] = 2;
 	starting_tensor->array[2 * data_order + 1] = 2;
 	starting_tensor->array[2 * data_order + 2] = 2;
+	//Finished
+
 	struct star_stencil *stencil = init_stencil(dimension, stencil_order);
+	
 
 	stencil->axis[0] = 0.1;
 	stencil->axis[1] = 0.3;
@@ -50,9 +54,9 @@ int main(int argc, char *argv[])
 			1);
 	
 	struct tensor *b = tensor_contraction(
-			stencil->tensors[1],
-			2,
 			starting_tensor,
+			2,
+			stencil->tensors[1],
 			2);
 
 	struct tensor *c = add_tensors(a,b);
