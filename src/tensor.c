@@ -17,6 +17,21 @@ struct tensor *init_tensor(int dimension, int order)
 	return tensor;
 }
 
+struct tensor *add_tensors(struct tensor *a, struct tensor *b)
+{
+	if (a->dimension != b->dimension || a->order != b->order)
+	{
+		error_print("these tensors cannot be added as they do not share the same dim and order");
+		return 0;
+	}
+	struct tensor *result = init_tensor(a->dimension, b->order);
+	for (int i = 0; i < pow(a->order, a->dimension); i++)
+	{
+		result->array[i] = a->array[i] + b->array[i];
+	}
+	return result;
+}
+
 void print_tensor(struct tensor *tensor)
 {
 	int n = tensor->order;
@@ -26,7 +41,7 @@ void print_tensor(struct tensor *tensor)
 	}
 	switch (tensor->dimension)
 	{
-	case 0: 
+	case 0:
 		printf("| ");
 		float_print(tensor->array[0]);
 		printf("|\n\n");
@@ -54,7 +69,7 @@ void print_tensor(struct tensor *tensor)
 		printf("\n");
 		break;
 
-	case 3: ;
+	case 3:;
 		char edge = '|';
 		for (int k = 0; k < n; k++)
 		{
@@ -68,12 +83,12 @@ void print_tensor(struct tensor *tensor)
 			}
 			for (int j = 0; j < n; j++)
 			{
-				printf("%c ",edge);
+				printf("%c ", edge);
 				for (int i = 0; i < n; i++)
 				{
 					float_print(tensor->array[i + n * j + n * n * k]);
 				}
-				printf("%c\n",edge);
+				printf("%c\n", edge);
 			}
 			printf("\n");
 		}

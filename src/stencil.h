@@ -5,6 +5,7 @@ struct star_stencil {
 	int dimension;
 	int order;
 	float* axis; 
+	//Axis transformation tensors 
 	struct tensor** tensors; 
 	struct eigen_decomposition** decompositions;
 };
