@@ -25,9 +25,9 @@ int main(int argc, char *argv[])
 	stencil->axis[1] = 0.3;
 	stencil->axis[2] = 0.1;
 
-	stencil->axis[3] = 0.1;
-	stencil->axis[4] = 0.3;
-	stencil->axis[5] = 0.1;
+	stencil->axis[3] = 0.2;
+	stencil->axis[4] = 0.1;
+	stencil->axis[5] = 0.2;
 	
 	print_tensor(starting_tensor);
 	print_stencil(stencil);
@@ -36,11 +36,10 @@ int main(int argc, char *argv[])
 
 	for (int i = 0; i < dimension; i++) {
 		print_tensor(stencil->tensors[i]);
+		print_eigen_decomposition(stencil->decompositions[i]);
+		print_tensor(tensor_contraction(stencil->decompositions[i]->left,2,stencil->decompositions[i]->left,1));
 	}
-	
-	struct eigen_decomposition* result = eigen_decompose_toeplitz(stencil->axis,3,5);
-	print_eigen_decomposition(result);
-	
+
 }
 
 
