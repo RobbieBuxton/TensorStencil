@@ -9,7 +9,7 @@
 #define ERROR_COLOUR "\x1B[31m" 
 
 void float_print(float a) {
-	if (a == 0) {
+	if (a < 0.00001 && a > -0.00001) {
 		printf("%+.*f ",PRINT_SF,a);
 	} else {
 		printf(NON_ZERO_COLOUR"%+.*f "NORMAL_COLOUR,PRINT_SF,a);

@@ -7,6 +7,7 @@
 #include "tensor.h"
 #include "util.h"
 #include "contraction.h"
+#include "eigen_decomposition.h"
 
 #define DEBUG 1
 
@@ -36,7 +37,9 @@ int main(int argc, char *argv[])
 	for (int i = 0; i < dimension; i++) {
 		print_tensor(stencil->tensors[i]);
 	}
-
+	
+	struct eigen_decomposition* result = eigen_decompose_toeplitz(stencil->axis,3,5);
+	print_eigen_decomposition(result);
 	
 }
 
