@@ -12,7 +12,7 @@ struct tensor *multi_basis_contraction(struct tensor* target, struct tensor** ba
 	for (int i = 0; i < dimension; i++)
 	{
 		// This stops seg faulting on the first case where no temp has been assigned
-		if (i != 0)
+		if (i > 1)
 		{
 			destroy_tensor(temp[(i + 1) % 2]);
 		}

@@ -26,10 +26,10 @@ void destroy_stencil(struct star_stencil* target)
 		destroy_tensor(target->in[i]);
 		destroy_tensor(target->out[i]);
 	}
-	// free(target->tensors);
-	// free(target->in);
-	// free(target->out);
-	// free(target->eigenvalues);
+	free(target->tensors);
+	free(target->in);
+	free(target->out);
+	free(target->eigenvalues);
 	free(target);
 }
 
