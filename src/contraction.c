@@ -22,7 +22,9 @@ struct tensor *multi_basis_contraction(struct tensor* target, struct tensor** ba
 				temp[i % 2],
 				dimension - i);
 	}
-
+	if (dimension > 1) {
+		destroy_tensor(temp[(dimension+1) % 2]);
+	}
 	return temp[(dimension) % 2];
 }
 
