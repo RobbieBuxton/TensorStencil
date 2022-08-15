@@ -18,6 +18,21 @@ struct star_stencil *init_stencil(int dimension, int order)
 	return stencil;
 }
 
+void destroy_stencil(struct star_stencil* target)
+{
+	free(target->axis);
+	for (int i = 0; i < target->dimension; i++){
+		destroy_tensor(target->tensors[i]);
+		destroy_tensor(target->in[i]);
+		destroy_tensor(target->out[i]);
+	}
+	free(target->tensors);
+	free(target->in);
+	free(target->out);
+	free(target->eigenvalues);
+	free(target);
+}
+
 void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 {
 
@@ -28,17 +43,27 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 
 	int dim = stencil->dimension;
 	stencil->tensors = malloc(sizeof(struct tensor *) * dim);
-	stencil->decompositions = malloc(sizeof(struct eigen_decomposition *) * dim);
+	stencil->in = malloc(sizeof(struct tensor *) * dim);
+	stencil->eigenvalues = malloc(sizeof(float)*dim*data->order);
+	stencil->out = malloc(sizeof(struct tensor *) * dim);
+	struct eigen_decomposition * decomposition;
 	for (int k = 0; k < dim; k++)
 	{
 		stencil->tensors[k] = generate_toeplitz(
 				stencil->axis + k * stencil->order,
 				stencil->order,
 				data->order);
-		stencil->decompositions[k] = eigen_decompose_toeplitz(
+		decomposition = eigen_decompose_toeplitz(
 				stencil->axis + k * stencil->order,
 				stencil->order,
 				data->order);
+		stencil->in[k] = decomposition->in;
+		for (int i = 0; i < data->order; i++) 
+		{
+			stencil->eigenvalues[i + (k * data->order)] = decomposition->eigenvalues[i];
+		}
+		stencil->out[k] = decomposition->out;
+		destroy_eigen_decomposition(decomposition);
 	}
 }
 
@@ -73,6 +98,7 @@ struct tensor *generate_toeplitz(float *axis, int axis_order, int tensor_order)
 void print_stencil(struct star_stencil *stencil)
 {
 	int n = stencil->order;
+	int data_order = stencil->in[0]->order;
 	if (n > PRINT_MAX || !DEBUG)
 	{
 		return;
@@ -84,7 +110,16 @@ void print_stencil(struct star_stencil *stencil)
 		{
 			float_print(stencil->axis[i + n * j]);
 		}
-		printf("\n");
+		printf("\n\nIn:\n");
+		print_tensor(stencil->in[j]);
+		printf("Eigen Values:\n| ");
+		for (int i = 0; i < data_order; i++)
+		{
+			float_print(stencil->eigenvalues[i + data_order * j]);
+		}
+		printf("|\n\nOut:\n");
+		print_tensor(stencil->out[j]);
+
 	}
 	printf("\n");
 }

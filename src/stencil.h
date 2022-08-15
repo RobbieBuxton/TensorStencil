@@ -7,9 +7,12 @@ struct star_stencil {
 	float* axis; 
 	//Axis transformation tensors 
 	struct tensor** tensors; 
-	struct eigen_decomposition** decompositions;
+	struct tensor** in; 
+	float *eigenvalues; 
+	struct tensor** out;
 };
 
+extern void destroy_stencil(struct star_stencil* target);
 extern struct star_stencil* init_stencil(int dimension,int order);
 extern void print_stencil(struct star_stencil* stencil);
 extern void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data);

@@ -3,7 +3,7 @@
 
 #include "util.h"
 
-#define PRINT_SF 3
+#define PRINT_SF 6
 #define NON_ZERO_COLOUR "\x1B[32m"
 #define NORMAL_COLOUR "\x1B[0m" 
 #define ERROR_COLOUR "\x1B[31m" 

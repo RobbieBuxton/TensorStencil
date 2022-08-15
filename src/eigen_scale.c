@@ -3,9 +3,9 @@
 
 #include "eigen_scale.h"
 #include "tensor.h"
-#include "eigen_decomposition.h"
+#include "stencil.h"
 
-struct tensor *eigen_scale(struct tensor *target, struct eigen_decomposition **decompositions, int iterations)
+struct tensor *eigen_scale(struct tensor *target, struct star_stencil *stencil, int iterations)
 {
 	int n = target->order;
 	int dim = target->dimension;
@@ -16,10 +16,9 @@ struct tensor *eigen_scale(struct tensor *target, struct eigen_decomposition **d
 	// Assign eigenvalues to correct element
 	for (int k = 0; k < dim; k++)
 	{
-		eigenvalues = decompositions[k]->eigenvalues;
 		for (int i = 0; i < (int) pow(n, dim); i++)
 		{
-			result->array[i] += eigenvalues[i/(int)pow(n, k)%n];
+			result->array[i] += stencil->eigenvalues[k*target->order + i/(int)pow(n, k)%n];
 		}
 	}
 	

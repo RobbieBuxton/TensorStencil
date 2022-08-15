@@ -14,14 +14,15 @@
 
 int main(int argc, char *argv[])
 {
+	int iterations = 2;
 	int dimension = 2;
-	int data_order = 5;
+	int data_order = 7;
 	// Must be odd
 	int stencil_order = 3;
 
 	struct tensor *starting_tensor = init_tensor(dimension, data_order);
 
-	//Initing the starting data to arb thing
+	// Initing the starting data to arb thing
 	for (int i = 0; i < pow(data_order, dimension); i++)
 	{
 		starting_tensor->array[i] = 1.0;
@@ -30,10 +31,9 @@ int main(int argc, char *argv[])
 	starting_tensor->array[data_order + 2] = 2;
 	starting_tensor->array[2 * data_order + 1] = 2;
 	starting_tensor->array[2 * data_order + 2] = 2;
-	//Finished
+	// Finished
 
 	struct star_stencil *stencil = init_stencil(dimension, stencil_order);
-	
 
 	stencil->axis[0] = 0.1;
 	stencil->axis[1] = 0.3;
@@ -43,38 +43,20 @@ int main(int argc, char *argv[])
 	stencil->axis[4] = 0.3;
 	stencil->axis[5] = 0.1;
 
-	print_tensor(starting_tensor);
-	print_stencil(stencil);
+	// print_tensor(starting_tensor);
 
 	init_stencil_tensors(stencil, starting_tensor);
 
-	struct tensor *a = tensor_contraction(
-			stencil->decompositions[0]->right,
-			2,
-			starting_tensor,
-			1);
-	
-	struct tensor *b = tensor_contraction(
-			a,
-			1,
-			stencil->decompositions[1]->left,
-			2);
+	// print_stencil(stencil);
 
-	struct tensor *c = eigen_scale(b,stencil->decompositions,1);
+	struct tensor *t = multi_basis_contraction(starting_tensor,stencil->out,dimension);
+	struct tensor *c = eigen_scale(t, stencil, iterations);
+	struct tensor *result = multi_basis_contraction(c,stencil->in,dimension);
+	print_tensor(result);
 
-	struct tensor *d = tensor_contraction(
-			stencil->decompositions[1]->right,
-			2,
-			c,
-			1);
-	
-	struct tensor *e = tensor_contraction(
-			d,
-			1,
-			stencil->decompositions[0]->left,
-			2);
-			
-	print_tensor(b);
-	print_tensor(c);
-	print_tensor(e);
+	destroy_tensor(starting_tensor);
+	destroy_tensor(t);
+	destroy_tensor(c);
+	destroy_tensor(result);
+	destroy_stencil(stencil);
 }

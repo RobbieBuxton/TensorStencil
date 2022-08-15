@@ -5,6 +5,31 @@
 #include "tensor.h"
 #include "util.h"
 
+struct tensor *multi_basis_contraction(struct tensor *target, struct tensor **basis_changes, int dimension)
+{
+	struct tensor *temp[2];
+	temp[0] = target;
+
+	for (int i = 0; i < dimension; i++)
+	{
+		// This stops seg faulting on the first case where no temp has been assigned
+		if (i > 1)
+		{
+			destroy_tensor(temp[(i + 1) % 2]);
+		}
+		temp[(i + 1) % 2] = tensor_contraction(
+				basis_changes[0],
+				1,
+				temp[i % 2],
+				dimension - i);
+	}
+	if (dimension > 1)
+	{
+		destroy_tensor(temp[(dimension + 1) % 2]);
+	}
+	return temp[(dimension) % 2];
+}
+
 struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct tensor *tensor_b, int index_b)
 {
 	if (tensor_a->order != tensor_b->order)
@@ -26,9 +51,9 @@ struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct t
 	for (int i = 0; i < pow(n, new_dimension); i++)
 	{
 		result->array[i] = contract_dimension(
-				&tensor_a->array[gen_index(n, index_a, i / (int) pow(n,tensor_b->dimension-1))],
+				&tensor_a->array[gen_index(n, index_a, i / (int)pow(n, tensor_b->dimension - 1))],
 				a_spacing,
-				&tensor_b->array[gen_index(n, index_b, i % (int) pow(n,tensor_b->dimension-1))],
+				&tensor_b->array[gen_index(n, index_b, i % (int)pow(n, tensor_b->dimension - 1))],
 				b_spacing,
 				n);
 	}
@@ -37,7 +62,7 @@ struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct t
 
 int gen_index(int n, int index, int i)
 {
-	return i%((int) pow(n,index-1)) + (i/(int) pow(n,index-1))*(int) pow(n,index);
+	return i % ((int)pow(n, index - 1)) + (i / (int)pow(n, index - 1)) * (int)pow(n, index);
 }
 
 float contract_dimension(float *start_a, int spacing_a, float *start_b, int spacing_b, int n)
