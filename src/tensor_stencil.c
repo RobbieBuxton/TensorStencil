@@ -43,14 +43,17 @@ int main(int argc, char *argv[])
 	stencil->axis[5] = 0.1;
 
 	print_tensor(starting_tensor);
-	print_stencil(stencil);
 
 	init_stencil_tensors(stencil, starting_tensor);
 
+	print_stencil(stencil);
+
 
 	struct tensor *t = multi_basis_contraction(starting_tensor,stencil->out,dimension);
+	print_tensor(t);
 	struct tensor *c = eigen_scale(t, stencil, 1);
 	print_tensor(c);
+
 	// struct tensor *d = tensor_contraction(
 	// 		stencil->decompositions[1]->right,
 	// 		2,

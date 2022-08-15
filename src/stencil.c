@@ -26,10 +26,10 @@ void destroy_stencil(struct star_stencil* target)
 		destroy_tensor(target->in[i]);
 		destroy_tensor(target->out[i]);
 	}
-	free(target->tensors);
-	free(target->in);
-	free(target->out);
-	free(target->eigenvalues);
+	// free(target->tensors);
+	// free(target->in);
+	// free(target->out);
+	// free(target->eigenvalues);
 	free(target);
 }
 
@@ -58,7 +58,7 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 				stencil->order,
 				data->order);
 		stencil->in[k] = decomposition->in;
-		for (int i = 0; i < stencil->order; i++) 
+		for (int i = 0; i < data->order; i++) 
 		{
 			stencil->eigenvalues[i + k * stencil->order] = decomposition->eigenvalues[i];
 		}
@@ -98,6 +98,7 @@ struct tensor *generate_toeplitz(float *axis, int axis_order, int tensor_order)
 void print_stencil(struct star_stencil *stencil)
 {
 	int n = stencil->order;
+	int data_order = stencil->in[0]->order;
 	if (n > PRINT_MAX || !DEBUG)
 	{
 		return;
@@ -109,7 +110,16 @@ void print_stencil(struct star_stencil *stencil)
 		{
 			float_print(stencil->axis[i + n * j]);
 		}
-		printf("\n");
+		printf("\n\nIn:\n");
+		print_tensor(stencil->in[j]);
+		printf("Eigen Values:\n| ");
+		for (int i = 0; i < data_order; i++)
+		{
+			float_print(stencil->eigenvalues[i + n * j]);
+		}
+		printf("|\n\nOut:\n");
+		print_tensor(stencil->out[j]);
+
 	}
 	printf("\n");
 }
