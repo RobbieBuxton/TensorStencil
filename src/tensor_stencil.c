@@ -8,6 +8,7 @@
 #include "util.h"
 #include "contraction.h"
 #include "eigen_decomposition.h"
+#include "eigen_scale.h"
 
 #define DEBUG 1
 
@@ -48,19 +49,32 @@ int main(int argc, char *argv[])
 	init_stencil_tensors(stencil, starting_tensor);
 
 	struct tensor *a = tensor_contraction(
-			stencil->tensors[0],
+			stencil->decompositions[0]->right,
 			2,
 			starting_tensor,
 			1);
 	
 	struct tensor *b = tensor_contraction(
-			starting_tensor,
-			2,
-			stencil->tensors[1],
+			a,
+			1,
+			stencil->decompositions[1]->left,
 			2);
 
-	struct tensor *c = add_tensors(a,b);
-	print_tensor(a);
+	struct tensor *c = eigen_scale(b,stencil->decompositions,1);
+
+	struct tensor *d = tensor_contraction(
+			stencil->decompositions[1]->right,
+			2,
+			c,
+			1);
+	
+	struct tensor *e = tensor_contraction(
+			d,
+			1,
+			stencil->decompositions[0]->left,
+			2);
+			
 	print_tensor(b);
 	print_tensor(c);
+	print_tensor(e);
 }
