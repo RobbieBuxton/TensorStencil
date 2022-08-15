@@ -44,7 +44,7 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 	int dim = stencil->dimension;
 	stencil->tensors = malloc(sizeof(struct tensor *) * dim);
 	stencil->in = malloc(sizeof(struct tensor *) * dim);
-	stencil->eigenvalues = malloc(sizeof(float)*dim*stencil->order);
+	stencil->eigenvalues = malloc(sizeof(float)*dim*data->order);
 	stencil->out = malloc(sizeof(struct tensor *) * dim);
 	struct eigen_decomposition * decomposition;
 	for (int k = 0; k < dim; k++)
@@ -60,7 +60,7 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 		stencil->in[k] = decomposition->in;
 		for (int i = 0; i < data->order; i++) 
 		{
-			stencil->eigenvalues[i + k * stencil->order] = decomposition->eigenvalues[i];
+			stencil->eigenvalues[i + (k * data->order)] = decomposition->eigenvalues[i];
 		}
 		stencil->out[k] = decomposition->out;
 		destroy_eigen_decomposition(decomposition);
@@ -115,7 +115,7 @@ void print_stencil(struct star_stencil *stencil)
 		printf("Eigen Values:\n| ");
 		for (int i = 0; i < data_order; i++)
 		{
-			float_print(stencil->eigenvalues[i + n * j]);
+			float_print(stencil->eigenvalues[i + data_order * j]);
 		}
 		printf("|\n\nOut:\n");
 		print_tensor(stencil->out[j]);

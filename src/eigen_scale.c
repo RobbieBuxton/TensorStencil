@@ -18,7 +18,7 @@ struct tensor *eigen_scale(struct tensor *target, struct star_stencil *stencil, 
 	{
 		for (int i = 0; i < (int) pow(n, dim); i++)
 		{
-			result->array[i] += stencil->eigenvalues[k*stencil->order + i/(int)pow(n, k)%n];
+			result->array[i] += stencil->eigenvalues[k*target->order + i/(int)pow(n, k)%n];
 		}
 	}
 	
