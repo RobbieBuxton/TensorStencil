@@ -5,6 +5,27 @@
 #include "tensor.h"
 #include "util.h"
 
+struct tensor *multi_basis_contraction(struct tensor* target, struct tensor** basis_changes, int dimension) {
+	struct tensor *temp[2];
+	temp[0] = target;
+
+	for (int i = 0; i < dimension; i++)
+	{
+		// This stops seg faulting on the first case where no temp has been assigned
+		if (i != 0)
+		{
+			destroy_tensor(temp[(i + 1) % 2]);
+		}
+		temp[(i + 1) % 2] = tensor_contraction(
+				basis_changes[0],
+				1,
+				temp[i % 2],
+				dimension - i);
+	}
+
+	return temp[(dimension) % 2];
+}
+
 struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct tensor *tensor_b, int index_b)
 {
 	if (tensor_a->order != tensor_b->order)

@@ -2,7 +2,7 @@
 #define EIGEN_SCALE
 
 #include "tensor.h"
-#include "eigen_decomposition.h"
+#include "stencil.h"
 
-extern struct tensor* eigen_scale(struct tensor* target, struct eigen_decomposition** decompositions, int iterations);
+extern struct tensor *eigen_scale(struct tensor* target, struct star_stencil *stencil, int iterations);
 #endif

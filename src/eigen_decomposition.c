@@ -29,8 +29,8 @@ struct eigen_decomposition *eigen_decompose_toeplitz(float *axis, int stencil_or
 		{
 			pwr = ((i)) / 2.0;
 			trig = sinf(((i + 1) * (j + 1) * M_PI) / (tensor_order + 1));
-			result->left->array[i + j * tensor_order] = trig * powf(ratio, pwr - (tensor_order / 2.0) + 0.5);
-			result->right->array[i + j * tensor_order] = trig * powf(ratio, -pwr);
+			result->in->array[i + j * tensor_order] = trig * powf(ratio, pwr - (tensor_order / 2.0) + 0.5);
+			result->out->array[i + j * tensor_order] = trig * powf(ratio, -pwr);
 		}
 	}
 	float *p = calloc(sizeof(float), tensor_order);
@@ -38,15 +38,15 @@ struct eigen_decomposition *eigen_decompose_toeplitz(float *axis, int stencil_or
 	// scalling - refactor this later because it always seems to be the same term
 	for (int i = 0; i < tensor_order; i++)
 	{
-		p[i] = 1 / sdot_(&tensor_order, result->left->array + i, &tensor_order, result->right->array + i, &tensor_order);
+		p[i] = 1 / sdot_(&tensor_order, result->in->array + i, &tensor_order, result->out->array + i, &tensor_order);
 	}
 
 	for (int i = 0; i < tensor_order; i++)
 	{
 		for (int k = 0; k < tensor_order; k++)
 		{
-			result->left->array[i + k * tensor_order] *= sqrtf(p[i]);
-			result->right->array[i + k * tensor_order] *= sqrtf(p[i]);
+			result->in->array[i + k * tensor_order] *= sqrtf(p[i]);
+			result->out->array[i + k * tensor_order] *= sqrtf(p[i]);
 		}
 	}
 	free(p);
@@ -58,29 +58,27 @@ struct eigen_decomposition *init_eigen_decomposition(int tensor_order)
 {
 	struct eigen_decomposition *result = calloc(sizeof(struct eigen_decomposition), 1);
 	result->order = tensor_order;
-	result->left = init_tensor(2, tensor_order);
+	result->in = init_tensor(2, tensor_order);
 	result->eigenvalues = calloc(sizeof(float), tensor_order);
-	result->right = init_tensor(2, tensor_order);
+	result->out = init_tensor(2, tensor_order);
 	return result;
 }
 
 void destroy_eigen_decomposition(struct eigen_decomposition *target)
 {
-	destroy_tensor(target->left);
 	free(target->eigenvalues);
-	destroy_tensor(target->right);
 	free(target);
 }
 
 void print_eigen_decomposition(struct eigen_decomposition *eigen_decomposition)
 {
-	printf("Left\n");
-	print_tensor(eigen_decomposition->left);
+	printf("in\n");
+	print_tensor(eigen_decomposition->in);
 	printf("Eigenvalues\n| ");
 	for (int i = 0; i < eigen_decomposition->order; i++)
 	{
 		float_print(eigen_decomposition->eigenvalues[i]);
 	}
-	printf("|\n\nRight\n");
-	print_tensor(eigen_decomposition->right);
+	printf("|\n\nout\n");
+	print_tensor(eigen_decomposition->out);
 }

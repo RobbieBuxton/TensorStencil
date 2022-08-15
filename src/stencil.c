@@ -23,10 +23,13 @@ void destroy_stencil(struct star_stencil* target)
 	free(target->axis);
 	for (int i = 0; i < target->dimension; i++){
 		destroy_tensor(target->tensors[i]);
-		destroy_eigen_decomposition(target->decompositions[i]);
+		destroy_tensor(target->in[i]);
+		destroy_tensor(target->out[i]);
 	}
 	free(target->tensors);
-	free(target->decompositions);
+	free(target->in);
+	free(target->out);
+	free(target->eigenvalues);
 	free(target);
 }
 
@@ -40,17 +43,27 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 
 	int dim = stencil->dimension;
 	stencil->tensors = malloc(sizeof(struct tensor *) * dim);
-	stencil->decompositions = malloc(sizeof(struct eigen_decomposition *) * dim);
+	stencil->in = malloc(sizeof(struct tensor *) * dim);
+	stencil->eigenvalues = malloc(sizeof(float)*dim*stencil->order);
+	stencil->out = malloc(sizeof(struct tensor *) * dim);
+	struct eigen_decomposition * decomposition;
 	for (int k = 0; k < dim; k++)
 	{
 		stencil->tensors[k] = generate_toeplitz(
 				stencil->axis + k * stencil->order,
 				stencil->order,
 				data->order);
-		stencil->decompositions[k] = eigen_decompose_toeplitz(
+		decomposition = eigen_decompose_toeplitz(
 				stencil->axis + k * stencil->order,
 				stencil->order,
 				data->order);
+		stencil->in[k] = decomposition->in;
+		for (int i = 0; i < stencil->order; i++) 
+		{
+			stencil->eigenvalues[i + k * stencil->order] = decomposition->eigenvalues[i];
+		}
+		stencil->out[k] = decomposition->out;
+		destroy_eigen_decomposition(decomposition);
 	}
 }
 
