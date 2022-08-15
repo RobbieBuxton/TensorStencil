@@ -17,6 +17,12 @@ struct tensor *init_tensor(int dimension, int order)
 	return tensor;
 }
 
+void destroy_tensor(struct tensor* target)
+{
+	free(target->array);
+	free(target);
+}
+
 struct tensor *add_tensors(struct tensor *a, struct tensor *b)
 {
 	if (a->dimension != b->dimension || a->order != b->order)

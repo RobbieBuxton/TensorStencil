@@ -49,7 +49,8 @@ struct eigen_decomposition *eigen_decompose_toeplitz(float *axis, int stencil_or
 			result->right->array[i + k * tensor_order] *= sqrtf(p[i]);
 		}
 	}
-	// End refactor 
+	free(p);
+	// End refactor
 	return result;
 }
 
@@ -61,6 +62,14 @@ struct eigen_decomposition *init_eigen_decomposition(int tensor_order)
 	result->eigenvalues = calloc(sizeof(float), tensor_order);
 	result->right = init_tensor(2, tensor_order);
 	return result;
+}
+
+void destroy_eigen_decomposition(struct eigen_decomposition *target)
+{
+	destroy_tensor(target->left);
+	free(target->eigenvalues);
+	destroy_tensor(target->right);
+	free(target);
 }
 
 void print_eigen_decomposition(struct eigen_decomposition *eigen_decomposition)

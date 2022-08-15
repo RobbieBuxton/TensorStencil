@@ -18,6 +18,18 @@ struct star_stencil *init_stencil(int dimension, int order)
 	return stencil;
 }
 
+void destroy_stencil(struct star_stencil* target)
+{
+	free(target->axis);
+	for (int i = 0; i < target->dimension; i++){
+		destroy_tensor(target->tensors[i]);
+		destroy_eigen_decomposition(target->decompositions[i]);
+	}
+	free(target->tensors);
+	free(target->decompositions);
+	free(target);
+}
+
 void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 {
 

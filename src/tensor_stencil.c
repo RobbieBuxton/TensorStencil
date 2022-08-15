@@ -73,8 +73,16 @@ int main(int argc, char *argv[])
 			1,
 			stencil->decompositions[0]->left,
 			2);
-			
+
 	print_tensor(b);
 	print_tensor(c);
 	print_tensor(e);
+
+	destroy_tensor(a);
+	destroy_tensor(b);
+	destroy_tensor(c);
+	destroy_tensor(d);
+	destroy_tensor(e);
+	destroy_tensor(starting_tensor);
+	destroy_stencil(stencil);
 }

@@ -10,6 +10,7 @@ struct star_stencil {
 	struct eigen_decomposition** decompositions;
 };
 
+extern void destroy_stencil(struct star_stencil* target);
 extern struct star_stencil* init_stencil(int dimension,int order);
 extern void print_stencil(struct star_stencil* stencil);
 extern void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data);
