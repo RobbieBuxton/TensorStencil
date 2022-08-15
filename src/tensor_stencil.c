@@ -14,8 +14,9 @@
 
 int main(int argc, char *argv[])
 {
+	int iterations = 2;
 	int dimension = 2;
-	int data_order = 5;
+	int data_order = 7;
 	// Must be odd
 	int stencil_order = 3;
 
@@ -49,7 +50,7 @@ int main(int argc, char *argv[])
 	// print_stencil(stencil);
 
 	struct tensor *t = multi_basis_contraction(starting_tensor,stencil->out,dimension);
-	struct tensor *c = eigen_scale(t, stencil, 1);
+	struct tensor *c = eigen_scale(t, stencil, iterations);
 	struct tensor *result = multi_basis_contraction(c,stencil->in,dimension);
 	print_tensor(result);
 
