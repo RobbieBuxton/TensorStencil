@@ -3,7 +3,7 @@
 
 struct star_stencil {
 	int dimension;
-	int order;
+	int max_order;
 	float* axis; 
 	//Axis transformation tensors 
 	struct tensor** tensors; 
