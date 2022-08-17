@@ -18,10 +18,11 @@ struct star_stencil *init_stencil(int dimension, int order)
 	return stencil;
 }
 
-void destroy_stencil(struct star_stencil* target)
+void destroy_stencil(struct star_stencil *target)
 {
 	free(target->axis);
-	for (int i = 0; i < target->dimension; i++){
+	for (int i = 0; i < target->dimension; i++)
+	{
 		destroy_tensor(target->tensors[i]);
 		destroy_tensor(target->in[i]);
 		destroy_tensor(target->out[i]);
@@ -44,23 +45,23 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 	int dim = stencil->dimension;
 	stencil->tensors = malloc(sizeof(struct tensor *) * dim);
 	stencil->in = malloc(sizeof(struct tensor *) * dim);
-	stencil->eigenvalues = malloc(sizeof(float)*dim*data->order);
+	stencil->eigenvalues = malloc(sizeof(float) * dim * data->order);
 	stencil->out = malloc(sizeof(struct tensor *) * dim);
-	struct eigen_decomposition * decomposition;
+	struct eigen_decomposition *decomposition;
 	int axis_order;
 	for (int k = 0; k < dim; k++)
 	{
-		axis_order = get_axis_order(stencil->axis + k * stencil->max_order,stencil->max_order); 
+		axis_order = get_axis_order(stencil->axis + k * stencil->max_order, stencil->max_order);
 		stencil->tensors[k] = generate_toeplitz(
 				stencil->axis + k * stencil->max_order,
 				stencil->max_order,
 				data->order);
 		decomposition = eigen_decompose_toeplitz(
-				(stencil->max_order - axis_order)/2 +stencil->axis + k * stencil->max_order,
+				(stencil->max_order - axis_order) / 2 + stencil->axis + k * stencil->max_order,
 				axis_order,
 				data->order);
 		stencil->in[k] = decomposition->in;
-		for (int i = 0; i < data->order; i++) 
+		for (int i = 0; i < data->order; i++)
 		{
 			stencil->eigenvalues[i + (k * data->order)] = decomposition->eigenvalues[i];
 		}
@@ -69,16 +70,28 @@ void init_stencil_tensors(struct star_stencil *stencil, struct tensor *data)
 	}
 }
 
-int get_axis_order(float* axis, int max_order) {
-	int order = max_order; 
-	for (int i = 0; i < (max_order-1)/2; i++) {
-		if (axis[i] == 0 && axis[max_order-1-i] == 0) {
-			order -= 2; 
-		} else {
+int get_axis_order(float *axis, int max_order)
+{
+	int order = max_order;
+	for (int i = 0; i < (max_order - 1) / 2; i++)
+	{
+		if (axis[i] == 0 && axis[max_order - 1 - i] == 0)
+		{
+			order -= 2;
+		}
+		else
+		{
 			return order;
 		}
 	}
-	return order;
+	if (axis[(max_order - 1)/2] == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
 
 struct tensor *generate_toeplitz(float *axis, int axis_order, int tensor_order)
@@ -134,7 +147,6 @@ void print_stencil(struct star_stencil *stencil)
 		}
 		printf("|\n\nOut:\n");
 		print_tensor(stencil->out[j]);
-
 	}
 	printf("\n");
 }

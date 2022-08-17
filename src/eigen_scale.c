@@ -21,8 +21,10 @@ struct tensor *eigen_scale(struct tensor *target, struct star_stencil *stencil, 
 			result->array[i] += stencil->eigenvalues[k*target->order + i/(int)pow(n, k)%n];
 		}
 	}
-	printf("Eigenvalue map\n");
-	print_tensor(result);
+
+	// printf("Eigenvalue map\n");
+	// print_tensor(result);
+	
 	for (int i = 0; i < pow(n, dim); i++)
 	{
 		result->array[i] = target->array[i]*pow(result->array[i],iterations);

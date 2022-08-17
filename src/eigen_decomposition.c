@@ -16,6 +16,8 @@ struct eigen_decomposition *eigen_decompose_toeplitz(float *axis, int stencil_or
 {
 	switch (stencil_order)
 	{
+	case 0:
+		return eigen_decompose_zero_toeplitz(tensor_order);
 	case 1:
 		return eigen_decompose_diagonal_toeplitz(axis[0], tensor_order);
 	case 3:
@@ -26,6 +28,18 @@ struct eigen_decomposition *eigen_decompose_toeplitz(float *axis, int stencil_or
 		error_print(msg);
 		exit(EXIT_FAILURE);
 	}
+}
+
+struct eigen_decomposition *eigen_decompose_zero_toeplitz(int tensor_order)
+{
+	struct eigen_decomposition *result = init_eigen_decomposition(tensor_order);
+	for (int i = 0; i < tensor_order; i++)
+	{
+		result->eigenvalues[i] = 0;
+		result->in->array[i + i * tensor_order] = 1;
+		result->out->array[i + i * tensor_order] = 1;
+	}
+	return result;
 }
 
 struct eigen_decomposition *eigen_decompose_diagonal_toeplitz(float val, int tensor_order) {
