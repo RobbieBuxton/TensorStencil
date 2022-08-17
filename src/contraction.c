@@ -18,10 +18,10 @@ struct tensor *multi_basis_contraction(struct tensor *target, struct tensor **ba
 			destroy_tensor(temp[(i + 1) % 2]);
 		}
 		temp[(i + 1) % 2] = tensor_contraction(
-				basis_changes[0],
-				1,
+				basis_changes[i],
+				1, 
 				temp[i % 2],
-				dimension - i);
+				1);
 	}
 	if (dimension > 1)
 	{

@@ -14,9 +14,9 @@
 
 int main(int argc, char *argv[])
 {
-	int iterations = 2;
-	int dimension = 2;
-	int data_order = 7;
+	int iterations = 1;
+	int dimension = 3;
+	int data_order = 3;
 	// Must be odd
 	int stencil_order = 3;
 
@@ -27,31 +27,46 @@ int main(int argc, char *argv[])
 	{
 		starting_tensor->array[i] = 1.0;
 	}
-	starting_tensor->array[data_order + 1] = 2;
-	starting_tensor->array[data_order + 2] = 2;
-	starting_tensor->array[2 * data_order + 1] = 2;
-	starting_tensor->array[2 * data_order + 2] = 2;
+	// starting_tensor->array[data_order + 1] = 2;
+	// starting_tensor->array[data_order + 2] = 2;
+	// starting_tensor->array[2 * data_order + 1] = 2;
+	// starting_tensor->array[2 * data_order + 2] = 2;
 	// Finished
 
 	struct star_stencil *stencil = init_stencil(dimension, stencil_order);
 
-	stencil->axis[0] = 0.1;
-	stencil->axis[1] = 0.3;
-	stencil->axis[2] = 0.1;
+	//X
+	stencil->axis[0] = 0;
+	stencil->axis[1] = 0;
+	stencil->axis[2] = 0;
 
-	stencil->axis[3] = 0.1;
-	stencil->axis[4] = 0.3;
-	stencil->axis[5] = 0.1;
+	//Y
+	stencil->axis[3] = 0;
+	stencil->axis[4] = 0;
+	stencil->axis[5] = 0;
 
-	// print_tensor(starting_tensor);
+	//Z
+	stencil->axis[6] = 0.1;
+	stencil->axis[7] = 0.5;
+	stencil->axis[8] = 0.1;
+
+	print_tensor(starting_tensor);
 
 	init_stencil_tensors(stencil, starting_tensor);
 
-	// print_stencil(stencil);
+	print_stencil(stencil);
+
 
 	struct tensor *t = multi_basis_contraction(starting_tensor,stencil->out,dimension);
+	// printf("Post first basis change\n");
+	// print_tensor(t);
 	struct tensor *c = eigen_scale(t, stencil, iterations);
-	struct tensor *result = multi_basis_contraction(c,stencil->in,dimension);
+	// printf("Post Eigenscale\n");
+	// print_tensor(c);
+
+	struct tensor *result = multi_basis_contraction(c, stencil->in, dimension);
+
+	printf("Result\n");
 	print_tensor(result);
 
 	destroy_tensor(starting_tensor);

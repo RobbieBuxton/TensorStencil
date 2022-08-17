@@ -14,10 +14,47 @@
 
 struct eigen_decomposition *eigen_decompose_toeplitz(float *axis, int stencil_order, int tensor_order)
 {
-	if (stencil_order != 3)
+	switch (stencil_order)
 	{
-		error_print("Eigen_decomposition has not be implimented for non 3 order toeplitzs yet");
+	case 0:
+		return eigen_decompose_zero_toeplitz(tensor_order);
+	case 1:
+		return eigen_decompose_diagonal_toeplitz(axis[0], tensor_order);
+	case 3:
+		return eigen_decompose_tridiagonal_toeplitz(axis, tensor_order);
+	default:;
+		char msg[1024];
+		sprintf(msg, "Eigen_decomposition has not been implimented for %d order toeplitzs yet\n", stencil_order);
+		error_print(msg);
+		exit(EXIT_FAILURE);
 	}
+}
+
+struct eigen_decomposition *eigen_decompose_zero_toeplitz(int tensor_order)
+{
+	struct eigen_decomposition *result = init_eigen_decomposition(tensor_order);
+	for (int i = 0; i < tensor_order; i++)
+	{
+		result->eigenvalues[i] = 0;
+		result->in->array[i + i * tensor_order] = 1;
+		result->out->array[i + i * tensor_order] = 1;
+	}
+	return result;
+}
+
+struct eigen_decomposition *eigen_decompose_diagonal_toeplitz(float val, int tensor_order) {
+	struct eigen_decomposition *result = init_eigen_decomposition(tensor_order);
+	for (int i = 0; i < tensor_order; i++)
+	{
+		result->eigenvalues[i] = val;
+		result->in->array[i + i * tensor_order] = 1;
+		result->out->array[i + i * tensor_order] = 1;
+	}
+	return result;
+}
+
+struct eigen_decomposition *eigen_decompose_tridiagonal_toeplitz(float *axis, int tensor_order)
+{
 	struct eigen_decomposition *result = init_eigen_decomposition(tensor_order);
 	float pwr;
 	float trig;
@@ -33,7 +70,7 @@ struct eigen_decomposition *eigen_decompose_toeplitz(float *axis, int stencil_or
 			result->out->array[i + j * tensor_order] = trig * powf(ratio, -pwr);
 		}
 	}
-	float *p = calloc(sizeof(float), tensor_order);
+	float *p = malloc(sizeof(float)*tensor_order);
 
 	// scalling - refactor this later because it always seems to be the same term
 	for (int i = 0; i < tensor_order; i++)

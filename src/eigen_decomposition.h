@@ -10,8 +10,11 @@ struct eigen_decomposition {
 };
 
 extern void destroy_eigen_decomposition(struct eigen_decomposition *target);
+extern struct eigen_decomposition *eigen_decompose_zero_toeplitz(int tensor_order);
 extern struct eigen_decomposition* eigen_decompose_toeplitz(float *axis, int stencil_order, int tensor_order);
+extern struct eigen_decomposition *eigen_decompose_tridiagonal_toeplitz(float *axis, int tensor_order);
 extern struct eigen_decomposition* init_eigen_decomposition(int tensor_order);
 extern void print_eigen_decomposition(struct eigen_decomposition* eigen_decomposition);
 extern float sdot_(int *, float *, int *, float *, int *);
+extern struct eigen_decomposition *eigen_decompose_diagonal_toeplitz(float val, int tensor_order);
 #endif
