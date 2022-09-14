@@ -11,6 +11,7 @@
 #include "eigen_decomposition.h"
 #include "eigen_scale.h"
 #include "clock.h"
+#include "norms.h"
 
 #define DEBUG 1
 
@@ -19,9 +20,9 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 100;
+	int iterations = 0;
 	int dimension = 3;
-	int data_order = 300;
+	int data_order = 3;
 	// Must be odd
 	int stencil_order = 3;
 
@@ -51,11 +52,11 @@ int main(int argc, char *argv[])
 	stencil->axis[5] = 0.1;
 
 	//Z
-	stencil->axis[6] = 0.1;
-	stencil->axis[7] = 0.3;
-	stencil->axis[8] = 0.1;
+	// stencil->axis[6] = 0.1;
+	// stencil->axis[7] = 0.3;
+	// stencil->axis[8] = 0.1;
 	
-	// print_tensor(starting_tensor);
+	print_tensor(starting_tensor);
 
 	init_stencil_tensors(stencil, starting_tensor);
 
@@ -81,6 +82,8 @@ int main(int argc, char *argv[])
 
 	printf("Result\n");
 	print_tensor(result);
+
+	printf("Euclidean norm\n%f\n\n",euclidean_norm(result));
 
 	printf("###Time spent###\n");
 	printf("Init data        %fs\n",time_spent[0]);
