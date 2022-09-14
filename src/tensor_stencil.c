@@ -12,6 +12,7 @@
 #include "eigen_scale.h"
 #include "clock.h"
 #include "norms.h"
+#include "devito_adapter.h"
 
 #define DEBUG 1
 
@@ -56,6 +57,7 @@ int main(int argc, char *argv[])
 	// stencil->axis[7] = 0.3;
 	// stencil->axis[8] = 0.1;
 	
+	printf("Starting Tensor\n\n");
 	print_tensor(starting_tensor);
 
 	init_stencil_tensors(stencil, starting_tensor);
@@ -80,7 +82,8 @@ int main(int argc, char *argv[])
 
 	time_spent[3] = take_interval(&begin);
 
-	printf("Result\n");
+	//Tensor Stencil
+	printf("TensorStencil Result\n\n");
 	print_tensor(result);
 
 	printf("Euclidean norm\n%f\n\n",euclidean_norm(result));
@@ -91,6 +94,14 @@ int main(int argc, char *argv[])
 	printf("Eigen scale:     %fs\n",time_spent[2]);
 	printf("2st basis contr: %fs\n\n",time_spent[3]);
 	printf("Total:           %fs\n\n",time_spent[0]+time_spent[1]+time_spent[2]+time_spent[3]);
+	
+	//Devito
+	struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor);
+
+	printf("Devito Result\n\n");
+
+	print_tensor(devito_result);
+
 	destroy_tensor(starting_tensor);
 	destroy_tensor(t);
 	destroy_tensor(c);
