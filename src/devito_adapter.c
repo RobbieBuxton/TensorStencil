@@ -8,7 +8,7 @@
 #include "devito_stencil.h"
 #include "stencil.h"
 
-struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_stencil* stencil, int iterations)
+struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_stencil* stencil, int iterations, float* devito_timer)
 {
 	int padding = (stencil->max_order-1)/2;
 	int padded_order = tensor->order + 2*padding;
@@ -38,7 +38,7 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 
 	devito_stencil_kernel(stencil->axis,&u_vec, time_M, time_m, x0_blk0_size, x_M, x_m, y0_blk0_size, y_M, y_m, z_M, z_m, &timer);
 
-	printf("Devito took: %f\n\n",timer.section0);
+	*devito_timer = timer.section0;
 
 	struct tensor *result = init_tensor(tensor->dimension, padded_order);
 
