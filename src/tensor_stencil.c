@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 0;
+	int iterations = 20;
 	int dimension = 3;
 	int data_order = 3;
 	// Must be odd
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 	printf("Total:           %fs\n\n",time_spent[0]+time_spent[1]+time_spent[2]+time_spent[3]);
 	
 	//Devito
-	struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil);
+	struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations);
 
 	printf("Devito Result\n\n");
 
