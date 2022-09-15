@@ -14,6 +14,9 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	struct tensor* padded_tensor = pad_tensor(tensor, (stencil->max_order-1)/2);
 	printf("Padded Tensor\n\n");
 	print_tensor(padded_tensor);
+	struct tensor* unpadded_tensor = unpad_tensor(padded_tensor,(stencil->max_order-1)/2);
+	printf("Unpadded Tensor\n\n");
+	print_tensor(unpadded_tensor);
 
 	struct dataobj u_vec;
 	init_vector(&u_vec, tensor->order, tensor->dimension);

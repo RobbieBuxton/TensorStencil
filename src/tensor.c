@@ -19,36 +19,90 @@ struct tensor *init_tensor(int dimension, int order)
 
 struct tensor *pad_tensor(struct tensor *tensor, int padding)
 {
+	int unpadded_order = tensor->order;
+	int padded_order = tensor->order + 2 * padding;;
+
 	//Rewrite this recursively at some point as a general function
-	struct tensor *result = init_tensor(tensor->dimension, tensor->order + 2 * padding);
+	struct tensor *result = init_tensor(tensor->dimension, padded_order);
 	switch (tensor->dimension)
 	{
 	case 1:
-		for (int i = 0; i < tensor->order; i++)
+		for (int i = 0; i < unpadded_order; i++)
 		{
 			result->array[i + padding] = tensor->array[i];
 		}
 		break;
 	case 2:
-		for (int j = 0; j < tensor->order; j++)
+		for (int j = 0; j < unpadded_order; j++)
 		{
-			for (int i = 0; i < tensor->order; i++)
+			for (int i = 0; i < unpadded_order; i++)
 			{
-				result->array[i + padding + j*(tensor->order+2*padding) + (tensor->order+2*padding)] = tensor->array[i+j*tensor->order];
+				result->array[
+					i + padding + 
+					(j+1)*padded_order] = tensor->array[i+j*unpadded_order];
 			}
 		}
 		break;
 	case 3:
-		for (int k = 0; k < tensor->order; k++)
+		for (int k = 0; k < unpadded_order; k++)
 		{
-			for (int j = 0; j < tensor->order; j++)
+			for (int j = 0; j < unpadded_order; j++)
 			{
-				for (int i = 0; i < tensor->order; i++)
+				for (int i = 0; i < unpadded_order; i++)
 				{
 					result->array[
 						i + padding + 
-						j*(tensor->order+2*padding) + tensor->order+2*padding + 
-						k*(int) pow(tensor->order+2*padding,2) + (int) pow(tensor->order+2*padding,2)] = tensor->array[i+j*tensor->order+k* (int) pow(tensor->order,2)];
+						(j+1)*padded_order + 
+						(k+1)*padded_order*padded_order] = tensor->array[i+j*unpadded_order+k*unpadded_order*unpadded_order];
+				}
+			}	
+		}
+		break;
+	default:
+		error_print("padding in this tensor dimension is not supported\n");
+		break;
+	}
+	return result;
+}
+
+struct tensor *unpad_tensor(struct tensor *tensor, int padding)
+{
+	int unpadded_order = tensor->order - 2 * padding;
+	int padded_order = tensor->order;
+	//Rewrite this recursively at some point as a general function
+	struct tensor *result = init_tensor(tensor->dimension, unpadded_order);
+	switch (tensor->dimension)
+	{
+	case 1:
+		for (int i = 0; i < unpadded_order; i++)
+		{
+			result->array[i] = tensor->array[i + padding];
+		}
+		break;
+	case 2:
+		for (int j = 0; j < unpadded_order; j++)
+		{
+			for (int i = 0; i < unpadded_order; i++)
+			{
+				result->array[i+j*unpadded_order] = 
+					tensor->array[
+						i + padding + 
+						(j+1)*padded_order];
+			}
+		}
+		break;
+	case 3:
+		for (int k = 0; k < unpadded_order; k++)
+		{
+			for (int j = 0; j < unpadded_order; j++)
+			{
+				for (int i = 0; i < unpadded_order; i++)
+				{
+					result->array[i+j*unpadded_order+k*unpadded_order*unpadded_order] = 
+						tensor->array[
+							i + padding + 
+							(j+1)*padded_order + 
+							(k+1)*padded_order*padded_order];
 				}
 			}	
 		}
