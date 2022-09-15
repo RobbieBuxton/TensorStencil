@@ -36,7 +36,7 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	int z_M = unpadded_order-1; 
 	int z_m = 0;
 
-	devito_stencil_kernel(&u_vec, time_M, time_m, x0_blk0_size, x_M, x_m, y0_blk0_size, y_M, y_m, z_M, z_m, &timer);
+	devito_stencil_kernel(stencil->axis,&u_vec, time_M, time_m, x0_blk0_size, x_M, x_m, y0_blk0_size, y_M, y_m, z_M, z_m, &timer);
 
 	printf("Devito took: %f\n\n",timer.section0);
 
@@ -55,7 +55,6 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	return unpadded_result;
 }
 
-//Switch order and dim args
 void init_vector(struct dataobj *restrict vect, int dim, int order)
 {
 	float *data = calloc(sizeof(float), pow(order, dim)*2);

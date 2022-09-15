@@ -15,7 +15,7 @@
 #include "pmmintrin.h"
 #include "devito_stencil.h"
 
-int devito_stencil_kernel(struct dataobj *restrict u_vec, const int time_M, const int time_m, const int x0_blk0_size, const int x_M, const int x_m, const int y0_blk0_size, const int y_M, const int y_m, const int z_M, const int z_m, struct profiler *timers)
+int devito_stencil_kernel(float* axis, struct dataobj *restrict u_vec, const int time_M, const int time_m, const int x0_blk0_size, const int x_M, const int x_m, const int y0_blk0_size, const int y_M, const int y_m, const int z_M, const int z_m, struct profiler *timers)
 {
 
 	float(*restrict u)[u_vec->size[1]][u_vec->size[2]][u_vec->size[3]] __attribute__((aligned(64))) = (float(*)[u_vec->size[1]][u_vec->size[2]][u_vec->size[3]])u_vec->data;
@@ -41,13 +41,13 @@ int devito_stencil_kernel(struct dataobj *restrict u_vec, const int time_M, cons
 						{
 							// printf("x: %d, y: %d z: %d\n", x + 1, y + 1, z + 1);
 							u[t1][x + 1][y + 1][z + 1] =
-									0.1*u[t0][x + 0][y + 1][z + 1] +
-									0.1*u[t0][x + 2][y + 1][z + 1] +
-									0.1*u[t0][x + 1][y + 0][z + 1] +
-									0.1*u[t0][x + 1][y + 2][z + 1] +
-									0.1*u[t0][x + 1][y + 1][z + 0] +
-									0.1*u[t0][x + 1][y + 1][z + 2] +
-									0.9*u[t0][x + 1][y + 1][z + 1];
+									axis[6]*u[t0][x + 0][y + 1][z + 1] +
+									axis[8]*u[t0][x + 2][y + 1][z + 1] +
+									axis[3]*u[t0][x + 1][y + 0][z + 1] +
+									axis[5]*u[t0][x + 1][y + 2][z + 1] +
+									axis[0]*u[t0][x + 1][y + 1][z + 0] +
+									axis[2]*u[t0][x + 1][y + 1][z + 2] +
+									(axis[1] + axis[4] + axis[7])*u[t0][x + 1][y + 1][z + 1];
 						}
 					}
 				}

@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 20;
+	int iterations = 1;
 	int dimension = 3;
 	int data_order = 3;
 	// Must be odd
@@ -43,19 +43,19 @@ int main(int argc, char *argv[])
 	struct star_stencil *stencil = init_stencil(dimension, stencil_order);
 
 	//X
-	stencil->axis[0] = 0.1;
-	stencil->axis[1] = 0.3;
-	stencil->axis[2] = 0.1;
+	stencil->axis[0] = 0.2;
+	stencil->axis[1] = 0.1;
+	stencil->axis[2] = 0.2;
 
 	//Y
-	stencil->axis[3] = 0.1;
+	stencil->axis[3] = 0.2;
 	stencil->axis[4] = 0.3;
-	stencil->axis[5] = 0.1;
+	stencil->axis[5] = 0.2;
 
 	//Z
-	stencil->axis[6] = 0.1;
-	stencil->axis[7] = 0.3;
-	stencil->axis[8] = 0.1;
+	stencil->axis[6] = 0.4;
+	stencil->axis[7] = 0.1;
+	stencil->axis[8] = 0.4;
 	
 	printf("Starting Tensor\n\n");
 	print_tensor(starting_tensor);
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 	printf("TensorStencil Result\n\n");
 	print_tensor(result);
 
-	printf("Euclidean norm\n%f\n\n",euclidean_norm(result));
+	float tensor_stencil_norm = euclidean_norm(result);
 
 	printf("###Time spent###\n");
 	printf("Init data        %fs\n",time_spent[0]);
@@ -95,12 +95,22 @@ int main(int argc, char *argv[])
 	printf("2st basis contr: %fs\n\n",time_spent[3]);
 	printf("Total:           %fs\n\n",time_spent[0]+time_spent[1]+time_spent[2]+time_spent[3]);
 	
-	//Devito
-	struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations);
+	//Devito only runs in 3d
+	if (dimension == 3 && stencil_order == 3)
+	{ 
+		struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations);
 
-	printf("Devito Result\n\n");
+		printf("Devito Result\n\n");
+		print_tensor(devito_result);
 
-	print_tensor(devito_result);
+		float devito_stencil_norm = euclidean_norm(devito_result);
+
+		printf("Euclidean norm\n");
+		printf("Tensor Stencil: %f\n",tensor_stencil_norm);
+		printf("Devito:         %f\n",devito_stencil_norm);
+		printf("Difference:     %f\n",tensor_stencil_norm-devito_stencil_norm);
+		printf("Percent Error:  %f\n\n",(tensor_stencil_norm-devito_stencil_norm)/devito_stencil_norm);
+	}
 
 	destroy_tensor(starting_tensor);
 	destroy_tensor(t);
