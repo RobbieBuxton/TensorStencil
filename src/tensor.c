@@ -17,7 +17,50 @@ struct tensor *init_tensor(int dimension, int order)
 	return tensor;
 }
 
-void destroy_tensor(struct tensor* target)
+struct tensor *pad_tensor(struct tensor *tensor, int padding)
+{
+	//Rewrite this recursively at some point as a general function
+	struct tensor *result = init_tensor(tensor->dimension, tensor->order + 2 * padding);
+	switch (tensor->dimension)
+	{
+	case 1:
+		for (int i = 0; i < tensor->order; i++)
+		{
+			result->array[i + padding] = tensor->array[i];
+		}
+		break;
+	case 2:
+		for (int j = 0; j < tensor->order; j++)
+		{
+			for (int i = 0; i < tensor->order; i++)
+			{
+				result->array[i + padding + j*(tensor->order+2*padding) + (tensor->order+2*padding)] = tensor->array[i+j*tensor->order];
+			}
+		}
+		break;
+	case 3:
+		for (int k = 0; k < tensor->order; k++)
+		{
+			for (int j = 0; j < tensor->order; j++)
+			{
+				for (int i = 0; i < tensor->order; i++)
+				{
+					result->array[
+						i + padding + 
+						j*(tensor->order+2*padding) + tensor->order+2*padding + 
+						k*(int) pow(tensor->order+2*padding,2) + (int) pow(tensor->order+2*padding,2)] = tensor->array[i+j*tensor->order+k* (int) pow(tensor->order,2)];
+				}
+			}	
+		}
+		break;
+	default:
+		error_print("padding in this tensor dimension is not supported\n");
+		break;
+	}
+	return result;
+}
+
+void destroy_tensor(struct tensor *target)
 {
 	free(target->array);
 	free(target);

@@ -6,9 +6,14 @@
 #include "devito_adapter.h"
 #include "tensor.h"
 #include "devito_stencil.h"
+#include "stencil.h"
 
-struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor)
+struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_stencil* stencil)
 {
+	
+	struct tensor* padded_tensor = pad_tensor(tensor, (stencil->max_order-1)/2);
+	printf("Padded Tensor\n\n");
+	print_tensor(padded_tensor);
 
 	struct dataobj u_vec;
 	init_vector(&u_vec, tensor->order, tensor->dimension);
@@ -26,7 +31,7 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor)
 	}
 
 	destroy_vector(&u_vec);
-
+	destroy_tensor(padded_tensor);
 	return result;
 }
 

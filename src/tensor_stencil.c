@@ -53,9 +53,9 @@ int main(int argc, char *argv[])
 	stencil->axis[5] = 0.1;
 
 	//Z
-	// stencil->axis[6] = 0.1;
-	// stencil->axis[7] = 0.3;
-	// stencil->axis[8] = 0.1;
+	stencil->axis[6] = 0.1;
+	stencil->axis[7] = 0.3;
+	stencil->axis[8] = 0.1;
 	
 	printf("Starting Tensor\n\n");
 	print_tensor(starting_tensor);
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 	printf("Total:           %fs\n\n",time_spent[0]+time_spent[1]+time_spent[2]+time_spent[3]);
 	
 	//Devito
-	struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor);
+	struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil);
 
 	printf("Devito Result\n\n");
 
