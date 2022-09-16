@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 50;
+	int iterations = 300;
 	int dimension = 3;
-	int data_order = 200;
+	int data_order = 300;
 	// Must be odd
 	int stencil_order = 3;
 
@@ -32,23 +32,30 @@ int main(int argc, char *argv[])
 	// Initing the starting data to arb thing
 	for (int i = 0; i < pow(data_order, dimension); i++)
 	{
-		starting_tensor->array[i] = 1.0;
+		starting_tensor->array[i] = 6.5;
 	}
-	starting_tensor->array[data_order + 1] = 2;
-	starting_tensor->array[data_order + 2] = 2;
-	starting_tensor->array[2 * data_order + 1] = 2;
-	starting_tensor->array[2 * data_order + 2] = 2;
+	// starting_tensor->array[data_order + 1] = 2;
+	// starting_tensor->array[data_order + 2] = 2;
+	// starting_tensor->array[2 * data_order + 1] = 2;
+	// starting_tensor->array[2 * data_order + 2] = 2;
 	// Finished
 
 	struct star_stencil *stencil = init_stencil(dimension, stencil_order);
 
 
 	//Vars 
-	float a = 0.25; 
-	float dt = 0.3; 
-	float h_x = 2;
-	float h_y = 3;
-	float h_z = 4;
+	
+	float nu = .5;
+	float dx = 2. / (data_order - 1);
+	float dy = 2. / (data_order - 1);
+	float dz = 2. / (data_order - 1);
+	float sigma = .25;
+	float dt = sigma * dx * dz * dy / nu;
+
+	float a = 0.1; 
+	float h_x = 1./(data_order - 1);
+	float h_y = 1./(data_order - 1);
+	float h_z = 1./(data_order - 1);
 
 	float centre = (dt*(a*(-2.0/pow(h_x,2)-2.0/pow(h_y,2)-2.0/pow(h_z,2))))+1;
 

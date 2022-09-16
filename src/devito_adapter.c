@@ -16,8 +16,6 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 
 	struct tensor *padded_tensor = pad_tensor(tensor, padding);
 
-	print_tensor(padded_tensor);
-
 	struct dataobj u_vec;
 	init_vector(&u_vec, tensor->dimension, padded_order);
 
@@ -44,8 +42,9 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	int y_m = 0;
 	int z_M = unpadded_order - 1;
 	int z_m = 0;
-	int nthreads = 6;
-
+	int nthreads = 4;
+	// printf("\n\na:%f, dt:%f, h_x%f, h_y:%f, h_z:%f, time_M:%d, time_m:%d, x_M:%d, x_m:%d, y_M:%d, y_m:%d, z_M:%d, z_m:%d, nthreads:%d\n\n",
+	// a, dt, h_x, h_y, h_z, time_M, time_m, x_M, x_m, y_M, y_m, z_M, z_m, nthreads);
 	Kernel(a, &u_vec, dt, h_x, h_y, h_z, time_M, time_m, x_M, x_m, y_M, y_m, z_M, z_m, nthreads, &timer);
 
 	*devito_timer = timer.section0;
