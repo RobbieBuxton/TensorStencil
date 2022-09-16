@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 1;
+	int iterations = 100;
 	int dimension = 3;
-	int data_order = 5;
+	int data_order = 100;
 	// Must be odd
 	int stencil_order = 3;
 
@@ -43,14 +43,14 @@ int main(int argc, char *argv[])
 	struct star_stencil *stencil = init_stencil(dimension, stencil_order);
 
 	//X
-	stencil->axis[0] = 0.05;
-	stencil->axis[1] = 0.2;
-	stencil->axis[2] = 0.05;
+	stencil->axis[0] = 0.1;
+	stencil->axis[1] = 0.3;
+	stencil->axis[2] = 0.1;
 
 	//Y
-	stencil->axis[3] = 0.05;
+	stencil->axis[3] = 0.1;
 	stencil->axis[4] = 0.3;
-	stencil->axis[5] = 0.05;
+	stencil->axis[5] = 0.1;
 
 	//Z
 	stencil->axis[6] = 0.05;
