@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 1;
+	int iterations = 50;
 	int dimension = 3;
-	int data_order = 2;
+	int data_order = 200;
 	// Must be odd
 	int stencil_order = 3;
 
@@ -45,10 +45,10 @@ int main(int argc, char *argv[])
 
 	//Vars 
 	float a = 0.25; 
-	float dt = 1; 
-	float h_x = 1;
-	float h_y = 1;
-	float h_z = 1;
+	float dt = 0.3; 
+	float h_x = 2;
+	float h_y = 3;
+	float h_z = 4;
 
 	float centre = (dt*(a*(-2.0/pow(h_x,2)-2.0/pow(h_y,2)-2.0/pow(h_z,2))))+1;
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 
 		float devito_stencil_norm = euclidean_norm(devito_result);
 
-		printf("###Tensor Stencil Time Spent###\n\n");
+		printf("###Devito Spent###\n\n");
 		printf("Total:           %fs\n\n",devito_timer);
 
 		printf("Euclidean norm\n");
