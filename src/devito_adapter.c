@@ -8,7 +8,7 @@
 #include "devito_stencil.h"
 #include "stencil.h"
 
-struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_stencil *stencil, int iterations, float a, float dt, float h_x, float h_y, float h_z, float *devito_timer)
+struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_stencil *stencil, int iterations, float dt, float h_x, float h_y, float h_z, float *devito_timer)
 {
 	int padding = 1 + (stencil->max_order - 1) / 2;
 	int padded_order = tensor->order + 2 * padding;
@@ -19,9 +19,9 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	struct dataobj u_vec;
 	init_vector(&u_vec, tensor->dimension, padded_order);
 
-	for (int i = 0; i < pow(padded_order, tensor->dimension)*2; i++)
+	for (int i = 0; i < pow(padded_order, tensor->dimension) * 2; i++)
 	{
-		((float *)u_vec.data)[i] = padded_tensor->array[i % (int) pow(padded_order, tensor->dimension)];
+		((float *)u_vec.data)[i] = padded_tensor->array[i % (int)pow(padded_order, tensor->dimension)];
 	}
 
 	struct profiler timer;
@@ -34,18 +34,18 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	// float h_z = 1;
 	int time_M = iterations - 1;
 	int time_m = 0;
-	// int x0_blk0_size = 1;
+	int x0_blk0_size = 1;
 	int x_M = unpadded_order - 1;
 	int x_m = 0;
-	// int y0_blk0_size = 1;
+	int y0_blk0_size = 1;
 	int y_M = unpadded_order - 1;
 	int y_m = 0;
 	int z_M = unpadded_order - 1;
 	int z_m = 0;
 	int nthreads = 4;
-	// printf("\n\na:%f, dt:%f, h_x%f, h_y:%f, h_z:%f, time_M:%d, time_m:%d, x_M:%d, x_m:%d, y_M:%d, y_m:%d, z_M:%d, z_m:%d, nthreads:%d\n\n",
-	// a, dt, h_x, h_y, h_z, time_M, time_m, x_M, x_m, y_M, y_m, z_M, z_m, nthreads);
-	Kernel(a, &u_vec, dt, h_x, h_y, h_z, time_M, time_m, x_M, x_m, y_M, y_m, z_M, z_m, nthreads, &timer);
+	printf("\n\ndt:%f, h_x%f, h_y:%f, h_z:%f, time_M:%d, time_m:%d, x_M:%d, x_m:%d, y_M:%d, y_m:%d, z_M:%d, z_m:%d, nthreads:%d\n\n",
+	dt, h_x, h_y, h_z, time_M, time_m, x_M, x_m, y_M, y_m, z_M, z_m, nthreads);
+	Kernel(&u_vec, dt, h_x, h_y, h_z, time_M, time_m, x0_blk0_size, x_M, x_m, y0_blk0_size, y_M, y_m, z_M, z_m, nthreads, &timer);
 
 	*devito_timer = timer.section0;
 

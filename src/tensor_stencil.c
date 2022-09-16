@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 300;
+	int iterations = 65;
 	int dimension = 3;
-	int data_order = 300;
+	int data_order = 150;
 	// Must be odd
 	int stencil_order = 3;
 
@@ -52,11 +52,11 @@ int main(int argc, char *argv[])
 	float sigma = .25;
 	float dt = sigma * dx * dz * dy / nu;
 
-	float a = 0.1; 
 	float h_x = 1./(data_order - 1);
 	float h_y = 1./(data_order - 1);
 	float h_z = 1./(data_order - 1);
 
+	float a = 0.1; 
 	float centre = (dt*(a*(-2.0/pow(h_x,2)-2.0/pow(h_y,2)-2.0/pow(h_z,2))))+1;
 
 	//X
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 	if (dimension == 3 && stencil_order == 3)
 	{ 
 		float devito_timer = 0;
-		struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations, a, dt, h_x, h_y, h_z, &devito_timer);
+		struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations, dt, h_x, h_y, h_z, &devito_timer);
 
 		printf("Devito Result\n\n");
 		print_tensor(devito_result);
