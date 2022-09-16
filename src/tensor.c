@@ -39,7 +39,7 @@ struct tensor *pad_tensor(struct tensor *tensor, int padding)
 			{
 				result->array[
 					i + padding + 
-					(j+1)*padded_order] = tensor->array[i+j*unpadded_order];
+					(j+padding)*padded_order] = tensor->array[i+j*unpadded_order];
 			}
 		}
 		break;
@@ -52,8 +52,8 @@ struct tensor *pad_tensor(struct tensor *tensor, int padding)
 				{
 					result->array[
 						i + padding + 
-						(j+1)*padded_order + 
-						(k+1)*padded_order*padded_order] = tensor->array[i+j*unpadded_order+k*unpadded_order*unpadded_order];
+						(j+padding)*padded_order + 
+						(k+padding)*padded_order*padded_order] = tensor->array[i+j*unpadded_order+k*unpadded_order*unpadded_order];
 				}
 			}	
 		}
@@ -87,7 +87,7 @@ struct tensor *unpad_tensor(struct tensor *tensor, int padding)
 				result->array[i+j*unpadded_order] = 
 					tensor->array[
 						i + padding + 
-						(j+1)*padded_order];
+						(j+padding)*padded_order];
 			}
 		}
 		break;
@@ -101,8 +101,8 @@ struct tensor *unpad_tensor(struct tensor *tensor, int padding)
 					result->array[i+j*unpadded_order+k*unpadded_order*unpadded_order] = 
 						tensor->array[
 							i + padding + 
-							(j+1)*padded_order + 
-							(k+1)*padded_order*padded_order];
+							(j+padding)*padded_order + 
+							(k+padding)*padded_order*padded_order];
 				}
 			}	
 		}

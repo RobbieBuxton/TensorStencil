@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 100;
+	int iterations = 1;
 	int dimension = 3;
-	int data_order = 100;
+	int data_order = 2;
 	// Must be odd
 	int stencil_order = 3;
 
@@ -42,20 +42,30 @@ int main(int argc, char *argv[])
 
 	struct star_stencil *stencil = init_stencil(dimension, stencil_order);
 
+
+	//Vars 
+	float a = 0.25; 
+	float dt = 1; 
+	float h_x = 1;
+	float h_y = 1;
+	float h_z = 1;
+
+	float centre = (dt*(a*(-2.0/pow(h_x,2)-2.0/pow(h_y,2)-2.0/pow(h_z,2))))+1;
+
 	//X
-	stencil->axis[0] = 0.1;
-	stencil->axis[1] = 0.3;
-	stencil->axis[2] = 0.1;
+	stencil->axis[0] = (dt*a)/pow(h_x,2);
+	stencil->axis[1] = centre/dimension;
+	stencil->axis[2] = (dt*a)/pow(h_x,2);
 
 	//Y
-	stencil->axis[3] = 0.1;
-	stencil->axis[4] = 0.3;
-	stencil->axis[5] = 0.1;
+	stencil->axis[3] = (dt*a)/pow(h_y,2);
+	stencil->axis[4] = centre/dimension;
+	stencil->axis[5] = (dt*a)/pow(h_y,2);
 
 	//Z
-	stencil->axis[6] = 0.05;
-	stencil->axis[7] = 0.2;
-	stencil->axis[8] = 0.05;
+	stencil->axis[6] = (dt*a)/pow(h_z,2);
+	stencil->axis[7] = centre/dimension;
+	stencil->axis[8] = (dt*a)/pow(h_z,2);
 	
 	printf("Starting Tensor\n\n");
 	print_tensor(starting_tensor);
@@ -99,7 +109,7 @@ int main(int argc, char *argv[])
 	if (dimension == 3 && stencil_order == 3)
 	{ 
 		float devito_timer = 0;
-		struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations, &devito_timer);
+		struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations, a, dt, h_x, h_y, h_z, &devito_timer);
 
 		printf("Devito Result\n\n");
 		print_tensor(devito_result);
