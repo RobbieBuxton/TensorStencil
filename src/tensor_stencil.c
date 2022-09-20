@@ -24,13 +24,13 @@ int main(int argc, char *argv[])
 
 	double time_spent[3];
 
-	int time_steps = 300; //65 to match devito
+	int time_steps = 500; //65 to match devito
 	int dimension = 3;
-	int data_size = 300;
+	int data_size = 500;
 	// Must be odd (only 3 supported atm)
 	int stencil_size = 3;
 
-	int enable_devito = 1; 
+	int enable_devito = 0; 
 
 	struct tensor *starting_tensor = init_tensor(dimension, data_size);
 
