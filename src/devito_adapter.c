@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "devito_adapter.h"
 #include "tensor.h"
@@ -45,9 +46,14 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	int nthreads = 4;
 	printf("\n\ndt:%f, h_x%f, h_y:%f, h_z:%f, time_M:%d, time_m:%d, x_M:%d, x_m:%d, y_M:%d, y_m:%d, z_M:%d, z_m:%d, nthreads:%d\n\n",
 	dt, h_x, h_y, h_z, time_M, time_m, x_M, x_m, y_M, y_m, z_M, z_m, nthreads);
-	Kernel(&u_vec, dt, h_x, h_y, h_z, time_M, time_m, x0_blk0_size, x_M, x_m, y0_blk0_size, y_M, y_m, z_M, z_m, nthreads, &timer);
 
-	*devito_timer = timer.section0;
+	struct timespec start, finish;
+	clock_gettime(CLOCK_MONOTONIC, &start);
+
+	Kernel(&u_vec, dt, h_x, h_y, h_z, time_M, time_m, x0_blk0_size, x_M, x_m, y0_blk0_size, y_M, y_m, z_M, z_m, nthreads, &timer);
+	clock_gettime(CLOCK_MONOTONIC, &finish);
+	*devito_timer = (finish.tv_sec - start.tv_sec);
+	*devito_timer += (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
 	struct tensor *result = init_tensor(tensor->dimension, padded_size);
 

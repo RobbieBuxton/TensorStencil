@@ -3,5 +3,5 @@
 
 #include <time.h>
 
-extern double take_interval(clock_t *begin);
+extern double take_interval(struct timespec *begin);
 #endif
