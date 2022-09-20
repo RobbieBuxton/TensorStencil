@@ -32,9 +32,9 @@ struct tensor *multi_basis_contraction(struct tensor *target, struct tensor **ba
 
 struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct tensor *tensor_b, int index_b)
 {
-	if (tensor_a->order != tensor_b->order)
+	if (tensor_a->size != tensor_b->size)
 	{
-		error_print("these tensors do not share the same order\n");
+		error_print("these tensors do not share the same size\n");
 		return 0;
 	}
 	if (index_a > tensor_a->dimension || index_b > tensor_b->dimension)
@@ -42,7 +42,7 @@ struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct t
 		error_print("you cannot contract on a index outside the dimension of the tensor\n");
 		return 0;
 	}
-	int n = tensor_a->order;
+	int n = tensor_a->size;
 	int new_dimension = tensor_a->dimension + tensor_b->dimension - 2;
 	struct tensor *result = init_tensor(new_dimension, n);
 

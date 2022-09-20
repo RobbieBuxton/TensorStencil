@@ -23,38 +23,38 @@ int main(int argc, char *argv[])
 
 	int iterations = 65; //65 to match devito
 	int dimension = 3;
-	int data_order = 200;
+	int data_size = 10;
 	// Must be odd (only 3 supported atm)
-	int stencil_order = 3;
+	int stencil_size = 3;
 
-	struct tensor *starting_tensor = init_tensor(dimension, data_order);
+	struct tensor *starting_tensor = init_tensor(dimension, data_size);
 
 	// Initing the starting data to arb thing
-	for (int i = 0; i < pow(data_order, dimension); i++)
+	for (int i = 0; i < pow(data_size, dimension); i++)
 	{
 		starting_tensor->array[i] = 6.5;
 	}
-	// starting_tensor->array[data_order + 1] = 2;
-	// starting_tensor->array[data_order + 2] = 2;
-	// starting_tensor->array[2 * data_order + 1] = 2;
-	// starting_tensor->array[2 * data_order + 2] = 2;
+	// starting_tensor->array[data_size + 1] = 2;
+	// starting_tensor->array[data_size + 2] = 2;
+	// starting_tensor->array[2 * data_size + 1] = 2;
+	// starting_tensor->array[2 * data_size + 2] = 2;
 	// Finished
 
-	struct star_stencil *stencil = init_stencil(dimension, stencil_order);
+	struct star_stencil *stencil = init_stencil(dimension, stencil_size);
 
 
 	//Vars 
 	
 	float nu = .5;
-	float dx = 2. / (data_order - 1);
-	float dy = 2. / (data_order - 1);
-	float dz = 2. / (data_order - 1);
+	float dx = 2. / (data_size - 1);
+	float dy = 2. / (data_size - 1);
+	float dz = 2. / (data_size - 1);
 	float sigma = .25;
 	float dt = sigma * dx * dz * dy / nu;
 
-	float h_x = 1./(data_order - 1);
-	float h_y = 1./(data_order - 1);
-	float h_z = 1./(data_order - 1);
+	float h_x = 1./(data_size - 1);
+	float h_y = 1./(data_size - 1);
+	float h_z = 1./(data_size - 1);
 
 	float a = 0.1; 
 	float centre = (dt*(a*(-2.0/pow(h_x,2)-2.0/pow(h_y,2)-2.0/pow(h_z,2))))+1;
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
 	printf("Total:           %fs\n\n",time_spent[0]+time_spent[1]+time_spent[2]+time_spent[3]);
 	
 	//Devito only runs in 3d
-	if (dimension == 3 && stencil_order == 3)
+	if (dimension == 3 && stencil_size == 3)
 	{ 
 		float devito_timer = 0;
 		struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations, dt, h_x, h_y, h_z, &devito_timer);
@@ -132,8 +132,6 @@ int main(int argc, char *argv[])
 		printf("Difference:     %f\n",tensor_stencil_norm-devito_stencil_norm);
 		printf("Percent Error:  %f\n\n",(tensor_stencil_norm-devito_stencil_norm)/devito_stencil_norm);
 		
-		printf("devito first val: %f\n",devito_result->array[0]);
-
 		destroy_tensor(devito_result);
 	}
 

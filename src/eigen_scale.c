@@ -7,7 +7,7 @@
 
 struct tensor *eigen_scale(struct tensor *target, struct star_stencil *stencil, int iterations)
 {
-	int n = target->order;
+	int n = target->size;
 	int dim = target->dimension;
 
 	struct tensor *result = init_tensor(dim, n);
@@ -18,7 +18,7 @@ struct tensor *eigen_scale(struct tensor *target, struct star_stencil *stencil, 
 	{
 		for (int i = 0; i < (int) pow(n, dim); i++)
 		{
-			result->array[i] += stencil->eigenvalues[k*target->order + i/(int)pow(n, k)%n];
+			result->array[i] += stencil->eigenvalues[k*target->size + i/(int)pow(n, k)%n];
 		}
 	}
 

@@ -8,52 +8,52 @@
 #define PRINT_MAX 15
 #define DEBUG 1
 
-struct tensor *init_tensor(int dimension, int order)
+struct tensor *init_tensor(int dimension, int size)
 {
 	struct tensor *tensor = malloc(sizeof(struct tensor));
 	tensor->dimension = dimension;
-	tensor->order = order;
-	tensor->array = calloc(sizeof(float), pow(order, dimension));
+	tensor->size = size;
+	tensor->array = calloc(sizeof(float), pow(size, dimension));
 	return tensor;
 }
 
 struct tensor *pad_tensor(struct tensor *tensor, int padding)
 {
-	int unpadded_order = tensor->order;
-	int padded_order = tensor->order + 2 * padding;;
+	int unpadded_size = tensor->size;
+	int padded_size = tensor->size + 2 * padding;;
 
 	//Rewrite this recursively at some point as a general function
-	struct tensor *result = init_tensor(tensor->dimension, padded_order);
+	struct tensor *result = init_tensor(tensor->dimension, padded_size);
 	switch (tensor->dimension)
 	{
 	case 1:
-		for (int i = 0; i < unpadded_order; i++)
+		for (int i = 0; i < unpadded_size; i++)
 		{
 			result->array[i + padding] = tensor->array[i];
 		}
 		break;
 	case 2:
-		for (int j = 0; j < unpadded_order; j++)
+		for (int j = 0; j < unpadded_size; j++)
 		{
-			for (int i = 0; i < unpadded_order; i++)
+			for (int i = 0; i < unpadded_size; i++)
 			{
 				result->array[
 					i + padding + 
-					(j+padding)*padded_order] = tensor->array[i+j*unpadded_order];
+					(j+padding)*padded_size] = tensor->array[i+j*unpadded_size];
 			}
 		}
 		break;
 	case 3:
-		for (int k = 0; k < unpadded_order; k++)
+		for (int k = 0; k < unpadded_size; k++)
 		{
-			for (int j = 0; j < unpadded_order; j++)
+			for (int j = 0; j < unpadded_size; j++)
 			{
-				for (int i = 0; i < unpadded_order; i++)
+				for (int i = 0; i < unpadded_size; i++)
 				{
 					result->array[
 						i + padding + 
-						(j+padding)*padded_order + 
-						(k+padding)*padded_order*padded_order] = tensor->array[i+j*unpadded_order+k*unpadded_order*unpadded_order];
+						(j+padding)*padded_size + 
+						(k+padding)*padded_size*padded_size] = tensor->array[i+j*unpadded_size+k*unpadded_size*unpadded_size];
 				}
 			}	
 		}
@@ -67,42 +67,42 @@ struct tensor *pad_tensor(struct tensor *tensor, int padding)
 
 struct tensor *unpad_tensor(struct tensor *tensor, int padding)
 {
-	int unpadded_order = tensor->order - 2 * padding;
-	int padded_order = tensor->order;
+	int unpadded_size = tensor->size - 2 * padding;
+	int padded_size = tensor->size;
 	//Rewrite this recursively at some point as a general function
-	struct tensor *result = init_tensor(tensor->dimension, unpadded_order);
+	struct tensor *result = init_tensor(tensor->dimension, unpadded_size);
 	switch (tensor->dimension)
 	{
 	case 1:
-		for (int i = 0; i < unpadded_order; i++)
+		for (int i = 0; i < unpadded_size; i++)
 		{
 			result->array[i] = tensor->array[i + padding];
 		}
 		break;
 	case 2:
-		for (int j = 0; j < unpadded_order; j++)
+		for (int j = 0; j < unpadded_size; j++)
 		{
-			for (int i = 0; i < unpadded_order; i++)
+			for (int i = 0; i < unpadded_size; i++)
 			{
-				result->array[i+j*unpadded_order] = 
+				result->array[i+j*unpadded_size] = 
 					tensor->array[
 						i + padding + 
-						(j+padding)*padded_order];
+						(j+padding)*padded_size];
 			}
 		}
 		break;
 	case 3:
-		for (int k = 0; k < unpadded_order; k++)
+		for (int k = 0; k < unpadded_size; k++)
 		{
-			for (int j = 0; j < unpadded_order; j++)
+			for (int j = 0; j < unpadded_size; j++)
 			{
-				for (int i = 0; i < unpadded_order; i++)
+				for (int i = 0; i < unpadded_size; i++)
 				{
-					result->array[i+j*unpadded_order+k*unpadded_order*unpadded_order] = 
+					result->array[i+j*unpadded_size+k*unpadded_size*unpadded_size] = 
 						tensor->array[
 							i + padding + 
-							(j+padding)*padded_order + 
-							(k+padding)*padded_order*padded_order];
+							(j+padding)*padded_size + 
+							(k+padding)*padded_size*padded_size];
 				}
 			}	
 		}
@@ -122,13 +122,13 @@ void destroy_tensor(struct tensor *target)
 
 struct tensor *add_tensors(struct tensor *a, struct tensor *b)
 {
-	if (a->dimension != b->dimension || a->order != b->order)
+	if (a->dimension != b->dimension || a->size != b->size)
 	{
-		error_print("these tensors cannot be added as they do not share the same dim and order");
+		error_print("these tensors cannot be added as they do not share the same dim and size");
 		return 0;
 	}
-	struct tensor *result = init_tensor(a->dimension, b->order);
-	for (int i = 0; i < pow(a->order, a->dimension); i++)
+	struct tensor *result = init_tensor(a->dimension, b->size);
+	for (int i = 0; i < pow(a->size, a->dimension); i++)
 	{
 		result->array[i] = a->array[i] + b->array[i];
 	}
@@ -137,7 +137,7 @@ struct tensor *add_tensors(struct tensor *a, struct tensor *b)
 
 void print_tensor(struct tensor *tensor)
 {
-	int n = tensor->order;
+	int n = tensor->size;
 	if (n > PRINT_MAX || !DEBUG)
 	{
 		return;

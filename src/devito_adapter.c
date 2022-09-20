@@ -10,18 +10,18 @@
 
 struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_stencil *stencil, int iterations, float dt, float h_x, float h_y, float h_z, float *devito_timer)
 {
-	int padding = 1 + (stencil->max_order - 1) / 2;
-	int padded_order = tensor->order + 2 * padding;
-	int unpadded_order = tensor->order;
+	int padding = 1 + (stencil->max_size - 1) / 2;
+	int padded_size = tensor->size + 2 * padding;
+	int unpadded_size = tensor->size;
 
 	struct tensor *padded_tensor = pad_tensor(tensor, padding);
 
 	struct dataobj u_vec;
-	init_vector(&u_vec, tensor->dimension, padded_order);
+	init_vector(&u_vec, tensor->dimension, padded_size);
 
-	for (int i = 0; i < pow(padded_order, tensor->dimension) * 2; i++)
+	for (int i = 0; i < pow(padded_size, tensor->dimension) * 2; i++)
 	{
-		((float *)u_vec.data)[i] = padded_tensor->array[i % (int)pow(padded_order, tensor->dimension)];
+		((float *)u_vec.data)[i] = padded_tensor->array[i % (int)pow(padded_size, tensor->dimension)];
 	}
 
 	struct profiler timer;
@@ -35,12 +35,12 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	int time_M = iterations - 1;
 	int time_m = 0;
 	int x0_blk0_size = 1;
-	int x_M = unpadded_order - 1;
+	int x_M = unpadded_size - 1;
 	int x_m = 0;
 	int y0_blk0_size = 1;
-	int y_M = unpadded_order - 1;
+	int y_M = unpadded_size - 1;
 	int y_m = 0;
-	int z_M = unpadded_order - 1;
+	int z_M = unpadded_size - 1;
 	int z_m = 0;
 	int nthreads = 4;
 	printf("\n\ndt:%f, h_x%f, h_y:%f, h_z:%f, time_M:%d, time_m:%d, x_M:%d, x_m:%d, y_M:%d, y_m:%d, z_M:%d, z_m:%d, nthreads:%d\n\n",
@@ -49,11 +49,11 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 
 	*devito_timer = timer.section0;
 
-	struct tensor *result = init_tensor(tensor->dimension, padded_order);
+	struct tensor *result = init_tensor(tensor->dimension, padded_size);
 
-	for (int i = 0; i < pow(padded_order, tensor->dimension); i++)
+	for (int i = 0; i < pow(padded_size, tensor->dimension); i++)
 	{
-		result->array[i] = ((float *)u_vec.data)[((time_M + 1) % 2) * (int)pow(padded_order, tensor->dimension) + i];
+		result->array[i] = ((float *)u_vec.data)[((time_M + 1) % 2) * (int)pow(padded_size, tensor->dimension) + i];
 	}
 
 	struct tensor *unpadded_result = unpad_tensor(result, padding);
@@ -65,15 +65,15 @@ struct tensor *devito_stencil_kernel_adapter(struct tensor *tensor, struct star_
 	return unpadded_result;
 }
 
-void init_vector(struct dataobj *restrict vect, int dim, int order)
+void init_vector(struct dataobj *restrict vect, int dim, int size)
 {
-	float *data = calloc(sizeof(float), pow(order, dim) * 2);
+	float *data = calloc(sizeof(float), pow(size, dim) * 2);
 	vect->data = data;
 	vect->size = calloc(sizeof(long), dim + 1);
 	vect->size[0] = dim;
 	for (int i = 1; i <= dim; i++)
 	{
-		vect->size[i] = order;
+		vect->size[i] = size;
 	}
 }
 
