@@ -21,9 +21,9 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int time_steps = 65; //65 to match devito
+	int time_steps = 200; //65 to match devito
 	int dimension = 3;
-	int data_size = 10;
+	int data_size = 200;
 	// Must be odd (only 3 supported atm)
 	int stencil_size = 3;
 
