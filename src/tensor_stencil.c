@@ -21,10 +21,10 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 65;
+	int iterations = 65; //65 to match devito
 	int dimension = 3;
-	int data_order = 150;
-	// Must be odd
+	int data_order = 200;
+	// Must be odd (only 3 supported atm)
 	int stencil_order = 3;
 
 	struct tensor *starting_tensor = init_tensor(dimension, data_order);
@@ -131,7 +131,9 @@ int main(int argc, char *argv[])
 		printf("Devito:         %f\n",devito_stencil_norm);
 		printf("Difference:     %f\n",tensor_stencil_norm-devito_stencil_norm);
 		printf("Percent Error:  %f\n\n",(tensor_stencil_norm-devito_stencil_norm)/devito_stencil_norm);
-	
+		
+		printf("devito first val: %f\n",devito_result->array[0]);
+
 		destroy_tensor(devito_result);
 	}
 
