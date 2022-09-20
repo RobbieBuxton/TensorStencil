@@ -5,7 +5,7 @@
 #include "tensor.h"
 #include "stencil.h"
 
-struct tensor *eigen_scale(struct tensor *target, struct star_stencil *stencil, int iterations)
+struct tensor *eigen_scale(struct tensor *target, struct star_stencil *stencil, int time_steps)
 {
 	int n = target->size;
 	int dim = target->dimension;
@@ -27,7 +27,7 @@ struct tensor *eigen_scale(struct tensor *target, struct star_stencil *stencil, 
 	
 	for (int i = 0; i < pow(n, dim); i++)
 	{
-		result->array[i] = target->array[i]*pow(result->array[i],iterations);
+		result->array[i] = target->array[i]*pow(result->array[i],time_steps);
 	}
 	return result;
 }

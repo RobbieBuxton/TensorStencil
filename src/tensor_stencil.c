@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 	clock_t begin = clock();
 	double time_spent[3];
 
-	int iterations = 65; //65 to match devito
+	int time_steps = 65; //65 to match devito
 	int dimension = 3;
 	int data_size = 10;
 	// Must be odd (only 3 supported atm)
@@ -89,7 +89,7 @@ int main(int argc, char *argv[])
 
 	time_spent[1] = take_interval(&begin);
 
-	struct tensor *c = eigen_scale(t, stencil, iterations);
+	struct tensor *c = eigen_scale(t, stencil, time_steps);
 	// printf("Post Eigenscale\n");
 	// print_tensor(c);
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 	if (dimension == 3 && stencil_size == 3)
 	{ 
 		float devito_timer = 0;
-		struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,iterations, dt, h_x, h_y, h_z, &devito_timer);
+		struct tensor* devito_result = devito_stencil_kernel_adapter(starting_tensor,stencil,time_steps, dt, h_x, h_y, h_z, &devito_timer);
 
 		printf("Devito Result\n\n");
 		print_tensor(devito_result);
