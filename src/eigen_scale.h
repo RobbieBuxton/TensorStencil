@@ -4,5 +4,5 @@
 #include "tensor.h"
 #include "stencil.h"
 
-extern struct tensor *eigen_scale(struct tensor* target, struct star_stencil *stencil, int iterations);
+extern struct tensor *eigen_scale(struct tensor* target, struct star_stencil *stencil, int time_steps);
 #endif

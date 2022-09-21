@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "math.h"
+#include <cblas.h>
 
 #include "contraction.h"
 #include "tensor.h"
@@ -32,9 +33,9 @@ struct tensor *multi_basis_contraction(struct tensor *target, struct tensor **ba
 
 struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct tensor *tensor_b, int index_b)
 {
-	if (tensor_a->order != tensor_b->order)
+	if (tensor_a->size != tensor_b->size)
 	{
-		error_print("these tensors do not share the same order\n");
+		error_print("these tensors do not share the same size\n");
 		return 0;
 	}
 	if (index_a > tensor_a->dimension || index_b > tensor_b->dimension)
@@ -42,35 +43,34 @@ struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct t
 		error_print("you cannot contract on a index outside the dimension of the tensor\n");
 		return 0;
 	}
-	int n = tensor_a->order;
+	int n = tensor_a->size;
 	int new_dimension = tensor_a->dimension + tensor_b->dimension - 2;
 	struct tensor *result = init_tensor(new_dimension, n);
 
-	int a_spacing = pow(n, index_a - 1);
-	int b_spacing = pow(n, index_b - 1);
-	for (int i = 0; i < pow(n, new_dimension); i++)
-	{
-		result->array[i] = contract_dimension(
-				&tensor_a->array[gen_index(n, index_a, i / (int)pow(n, tensor_b->dimension - 1))],
-				a_spacing,
-				&tensor_b->array[gen_index(n, index_b, i % (int)pow(n, tensor_b->dimension - 1))],
-				b_spacing,
-				n);
-	}
+	//Seems to always be 1
+	int spacing_a = pow(n, index_a - 1);
+	int spacing_b = pow(n, index_b - 1);
+
+	int array_size = pow(n, new_dimension);
+
+	cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans, n, n*n, n, 1.0, tensor_a->array, n, tensor_b->array, n, 0.0, result->array, n*n);
+
+	// for (int i = 0; i < array_size; i++)
+	// {
+	// 	int a_start = gen_index(n, index_a, i / (int)pow(n, tensor_b->dimension - 1));
+	// 	int b_start = gen_index(n, index_b, i % (int)pow(n, tensor_b->dimension - 1));
+	// 	// printf("array[%d] = sdot(%d,a[%d],%d,b[%d],%d)\n",i,n,a_start,spacing_a,b_start,spacing_b);
+	// 	result->array[i] =sdot_(&n,
+	// 			&tensor_a->array[a_start],
+	// 			&spacing_a,
+	// 			&tensor_b->array[b_start],
+	// 			&spacing_b);
+	// }
+	
 	return result;
 }
 
 int gen_index(int n, int index, int i)
 {
 	return i % ((int)pow(n, index - 1)) + (i / (int)pow(n, index - 1)) * (int)pow(n, index);
-}
-
-float contract_dimension(float *start_a, int spacing_a, float *start_b, int spacing_b, int n)
-{
-	float result = 0;
-	for (int i = 0; i < n; i++)
-	{
-		result += start_a[i * spacing_a] * start_b[i * spacing_b];
-	}
-	return result;
 }
