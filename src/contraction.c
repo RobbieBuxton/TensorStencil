@@ -59,14 +59,14 @@ struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct t
 	// {
 	// 	int a_start = gen_index(n, index_a, i / (int)pow(n, tensor_b->dimension - 1));
 	// 	int b_start = gen_index(n, index_b, i % (int)pow(n, tensor_b->dimension - 1));
-	// 	// printf("array[%d] = sdot(%d,a[%d],%d,b[%d],%d)\n",i,n,a_start,spacing_a,b_start,spacing_b);
+	// 	printf("array[%d] = sdot(%d,a[%d],%d,b[%d],%d)\n",i,n,a_start,spacing_a,b_start,spacing_b);
 	// 	result->array[i] =sdot_(&n,
 	// 			&tensor_a->array[a_start],
 	// 			&spacing_a,
 	// 			&tensor_b->array[b_start],
 	// 			&spacing_b);
 	// }
-	
+
 	return result;
 }
 

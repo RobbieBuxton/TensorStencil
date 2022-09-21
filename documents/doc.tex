@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{caption}
+\usepackage{algpseudocode}
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\begin{document}
+\begin{algorithm}[H]
+\caption{TensorStencil}\label{euclid}
+\begin{algorithmic}[1]
+\State $\textit{data}[n_1][n_2]..[n_k] \gets \cdots$ 
+\State $\textit{stencil}[k][2r+1] \gets \cdots$ \\
+\State $\textit{tensors}[k] = \texttt{convert\_stencil\_to\_transformations}(\textit{stencil})$
+\State $\textit{basis\_in}[k],\textit{eigen\_vals}[k], \textit{basis\_out}[k] = \texttt{eigen\_decompose}(\textit{tensors})$ \\
+\State $\textit{transformed\_data} = \texttt{tensor\_contract}(\textit{basis\_out},\textit{data})$ \\
+\For{$i_1 = 0; i_1 < n_1; i_1 \mathrel{+}= 1$}
+\For{$i_2 = 0; i_2 < n_2; i_2 \mathrel{+}= 1$}
+\State $\cdots$
+\For{$i_k = 0; i_k < n_k; i_k \mathrel{+}= 1$}
+\State $\textit{eigen\_scaled\_data}[i_1][i_2]\cdots[i_k] = $
+\State $\quad \textit{transformed\_data}[i_1][i_2]\cdots[i_k] \times $
+\State $\quad \quad (\textit{eigen\_vals}[0][i_1] + $
+\State $\quad \quad \textit{eigen\_vals}[1][i_2] + $
+\State $\quad \quad \cdots$
+\State $\quad \quad \textit{eigen\_vals}[k-1][i_k])^{\textit{time\_steps}}$
+\EndFor 
+\State $\cdots$
+\EndFor 
+\EndFor \\
+\State $\textit{result} = \texttt{tensor\_contract}(\textit{basis\_out},\textit{eigen\_scaled\_data})$
+\end{algorithmic}
+\end{algorithm}
+\end{document} 

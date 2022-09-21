@@ -19,9 +19,9 @@
 int main(int argc, char *argv[])
 {
 	int iterations = 1;
-	int size_start = 400;
+	int size_start = 600;
 	int size_step = 25;
-	int time_steps_start = 65;
+	int time_steps_start = 600;
 	int time_steps_step = 0;
 	float *times = malloc(sizeof(float) * 2 * iterations);
 	float *norm_error = malloc(sizeof(float) * iterations);
@@ -127,12 +127,15 @@ int test(float *times, float* norm_error, int data_size, int time_steps)
 	time_spent[1] = take_interval(&begin);
 
 	struct tensor *c = eigen_scale(t, stencil, time_steps);
+	destroy_tensor(t);
+
 	// printf("Post Eigenscale\n");
 	// print_tensor(c);
 
 	time_spent[2] = take_interval(&begin);
 
 	struct tensor *result = multi_basis_contraction(c, stencil->in, dimension);
+	destroy_tensor(c);
 
 	time_spent[3] = take_interval(&begin);
 
@@ -179,8 +182,6 @@ int test(float *times, float* norm_error, int data_size, int time_steps)
 	}
 
 	destroy_tensor(starting_tensor);
-	destroy_tensor(t);
-	destroy_tensor(c);
 	destroy_tensor(result);
 	destroy_stencil(stencil);
 
