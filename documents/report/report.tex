@@ -1,0 +1,57 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{TensorStencil Report}
+
+\author{\IEEEauthorblockN{Robert Buxton}
+\IEEEauthorblockA{rb419@ic.ac.uk}
+
+}
+
+\maketitle
+
+\begin{abstract}
+Todo
+\end{abstract}
+
+\begin{IEEEkeywords}
+Todo
+\end{IEEEkeywords}
+
+
+\section{Introduction}
+Todo (Make better use of tensor cores/gpu matrix multipliers for stencil computation)
+\section{Method}
+I propose an alternative to the classical iterative loop method for stencil computation. 
+Using the emergent properties of the transformation matrices use to represent stencil time step update we can calculate the state of input data after an arbitrary number of time steps. 
+
+SOURCE THE PAPER BEFORE THE DIAGRAM \\
+
+\input{stencil_split.tex} \\
+\input{vertical_stencil_to_toeplitz.tex} \\
+\input{horizontal_stencil_to_toeplitz.tex} \\
+\input{matrix_iteration.tex} \\
+\input{tensor_diagram_notation.tex} \\
+\input{tensor_two_d_iteration.tex}
+\section{Proof}
+
+Todo
+\section{Complexity}
+Todo
+\section{Results}
+Todo
+
+\end{document}
