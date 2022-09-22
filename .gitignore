@@ -13,6 +13,7 @@
 *.log
 *.pdf
 *.synctex.gz
+*.synctex(busy)
 *.fd
 *.bbl
 *.bcf

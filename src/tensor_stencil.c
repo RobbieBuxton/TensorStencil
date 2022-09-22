@@ -58,7 +58,7 @@ int test(float *times, float* norm_error, int data_size, int time_steps)
 	// Must be odd (only 3 supported atm)
 	int stencil_size = 3;
 
-	int enable_devito = 1;
+	int enable_devito = 0;
 
 	printf("\n######################\nNEW TEST\nDim: %d Size %d Time Steps %d\n\n",dimension, data_size, time_steps);
 
