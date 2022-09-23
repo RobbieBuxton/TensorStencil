@@ -1,0 +1,51 @@
+\renewcommand{\graphTensorSpacing}{1}
+
+\[
+\sum_{\substack{i_1,i_2,\cdots,i_n\\ \sum_{k=0}^{n}{i_k} =t}}
+\left(
+{t \choose {i_1,i_2,\cdots,i_n}}
+\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A$] (AT) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_1^{i_1}$] (X1) at (0 + 2*\graphLineSpacing,0) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,0 + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,0 - 0.2) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_2^{i_2}$] (X2) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-2*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-2*\graphLineSpacing - 0.2) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_n^{i_n}$] (XN0) at (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-5*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-5*\graphLineSpacing - 0.2) {};
+
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+	\draw[thick, draw=black] (AT) -- (0,0) -- (X1) -- (0 + 3*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black] (AT) -- (X2) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (0,-2.5*\graphLineSpacing) {}; 
+	\draw[thick, dotted] (0,-2.5*\graphLineSpacing)  -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (0 + \graphLineSpacing,-5*\graphLineSpacing) -- (XN0)  -- (0 + 3*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture}
+\right)
+\equiv
+A
+\circ
+\left(
+\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$I$] (I) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_1$] (X1) at (0 + 2*\graphLineSpacing,0) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,0 + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,0 - 0.2) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_2$] (X2) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-2*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-2*\graphLineSpacing - 0.2) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_n$] (XN0) at (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-5*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-5*\graphLineSpacing - 0.2) {};
+
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+	\draw[thick, draw=black] (AT) -- (0,0) -- (X1) -- (0 + 3*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black] (AT) -- (X2) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (0,-2.5*\graphLineSpacing) {}; 
+	\draw[thick, dotted] (0,-2.5*\graphLineSpacing)  -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (0 + \graphLineSpacing,-5*\graphLineSpacing) -- (XN0)  -- (0 + 3*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture}
+\right)^{\circ n}
+\]
