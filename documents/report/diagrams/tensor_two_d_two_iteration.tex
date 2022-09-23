@@ -1,0 +1,29 @@
+\renewcommand{\graphTensorSpacing}{1.1}
+\renewcommand{\graphTensorTwoStart}{1.5*\graphTensorSpacing}
+\renewcommand{\graphTensorThreeStart}{\graphTensorTwoStart+ 2*\graphTensorSpacing}
+\renewcommand{\graphTensorFourStart}{\graphTensorThreeStart+ 2*\graphTensorSpacing}
+
+\begin{tikzpicture}
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A_{t+2}$] (ATWO) at (0,0) {};
+	\node[circle,draw=black!80,thick,fill=black,label=left:${=} A_{t}$] (A) at (\graphTensorTwoStart,0) {};
+	\node[circle,draw=black!80,thick,fill=myGreen,label=above right:$X$] (X) at (\graphTensorTwoStart + \graphLineSpacing,\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGreen,label=above right:$X$] (X2) at (\graphTensorTwoStart + 2*\graphLineSpacing,\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=black,label=left:$+2A_{t}$] (AT) at (\graphTensorThreeStart,0) {};
+	\node[circle,draw=black!80,thick,fill=myGreen,label=above right:$X$] (X3) at (\graphTensorThreeStart + \graphLineSpacing,\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myOrange,label=above right:$Y$] (Y) at (\graphTensorThreeStart + \graphLineSpacing,-\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=black,label=left:$+A_{t}$] (ATT) at (\graphTensorFourStart,0) {};
+	\node[circle,draw=black!80,thick,fill=myOrange,label=above right:$Y$] (Y2) at (\graphTensorFourStart + \graphLineSpacing,-\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myOrange,label=above right:$Y$] (Y3) at (\graphTensorFourStart + 2*\graphLineSpacing,-\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (ATWO) -- (0,\graphLineSpacing) -- (\graphLineSpacing,\graphLineSpacing) {};
+	\draw[thick, draw=black] (ATWO) -- (0,-\graphLineSpacing) -- (\graphLineSpacing,-\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (A) -- (\graphTensorTwoStart,\graphLineSpacing) -- (X) -- (X2) -- (\graphTensorTwoStart + 3*\graphLineSpacing,\graphLineSpacing)  {};
+	\draw[thick, draw=black] (A) -- (\graphTensorTwoStart,-\graphLineSpacing) -- (\graphTensorTwoStart + \graphLineSpacing, -\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (\graphTensorThreeStart,\graphLineSpacing) -- (X3) -- (\graphTensorThreeStart + 2*\graphLineSpacing,\graphLineSpacing) {};
+	\draw[thick, draw=black] (AT) -- (\graphTensorThreeStart,-\graphLineSpacing) -- (Y) -- (\graphTensorThreeStart + 2*\graphLineSpacing,-\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (ATT) -- (\graphTensorFourStart,\graphLineSpacing)  -- (\graphTensorFourStart + \graphLineSpacing,\graphLineSpacing)  {};
+	\draw[thick, draw=black] (ATT) -- (\graphTensorFourStart,-\graphLineSpacing) -- (Y2) -- (Y3) -- (\graphTensorFourStart + 3*\graphLineSpacing, -\graphLineSpacing) {};
+\end{tikzpicture}

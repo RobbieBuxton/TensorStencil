@@ -14,6 +14,13 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
+\definecolor{myGreen}{RGB}{95,173,86}
+\definecolor{myYellow}{RGB}{242,193,78}
+\definecolor{myOrange}{RGB}{247,129,84}
+\definecolor{myBlue}{RGB}{118,146,255}
+\definecolor{myBrown}{RGB}{90,42,39}
+\definecolor{myGrey}{RGB}{238, 228, 225}
+
 \title{TensorStencil Report}
 
 \author{\IEEEauthorblockN{Robert Buxton}
@@ -40,12 +47,19 @@ Using the emergent properties of the transformation matrices use to represent st
 
 SOURCE THE PAPER BEFORE THE DIAGRAM \\
 
-\input{stencil_split.tex} \\
-\input{vertical_stencil_to_toeplitz.tex} \\
-\input{horizontal_stencil_to_toeplitz.tex} \\
-\input{matrix_iteration.tex} \\
-\input{tensor_diagram_notation.tex} \\
-\input{tensor_two_d_iteration.tex}
+\input{diagrams/stencil_split.tex} \\
+\input{diagrams/vertical_stencil_to_toeplitz.tex} \\
+\input{diagrams/horizontal_stencil_to_toeplitz.tex} \\
+\input{diagrams/matrix_iteration.tex} \\
+\input{diagrams/tensor_diagram_notation.tex} \\
+\input{diagrams/tensor_two_d_generic_iteration.tex}
+\input{diagrams/tensor_two_d_two_iteration.tex}
+\input{diagrams/tensor_two_d_t_iteration.tex}
+\input{diagrams/tensor_three_d_t_iteration.tex}
+\input{diagrams/tensor_n_d_t_iteration.tex}
+\input{diagrams/matrix_eigen_decomposition.tex}
+\input{diagrams/tensor_eigen_decomposition.tex}
+\input{diagrams/tensor_n_eigen_decomposition.tex}
 \section{Proof}
 
 Todo

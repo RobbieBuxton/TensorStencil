@@ -1,0 +1,31 @@
+
+\renewcommand{\graphTensorSpacing}{1.1}
+\renewcommand{\graphTensorTwoStart}{2.25*\graphTensorSpacing}
+\[
+\begin{tikzpicture}[baseline=-0.65ex]
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A_{t}$] (ATT) at (0,0) {};
+
+	\draw[thick, draw=black] (ATT) -- (0,\graphLineSpacing) -- (\graphLineSpacing,\graphLineSpacing) {};
+	\draw[thick, draw=black] (ATT) -- (0,-\graphLineSpacing) -- (\graphLineSpacing,-\graphLineSpacing) {};
+\end{tikzpicture}
+=
+\sum_{k=0}^{t}
+{t \choose k}
+\begin{tikzpicture}[baseline=-0.65ex]
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A_{0}$] (AT) at (\graphTensorTwoStart,0) {};
+	\node[circle,draw=black!80,thick,fill=myGreen,label=above right:$X$] (X) at (\graphTensorTwoStart + 2*\graphLineSpacing,\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myOrange,label=above right:$Y$] (Y) at (\graphTensorTwoStart + 2*\graphLineSpacing,-\graphLineSpacing) {};
+	\node (k) at (\graphTensorTwoStart + 4*\graphLineSpacing,\graphLineSpacing) {$k$};
+	\node (tk) at (\graphTensorTwoStart + 4*\graphLineSpacing,-\graphLineSpacing) {$t-k$};
+	\node[circle,draw=black!80,thick,fill=myGreen,label=above right:$X$] (X1) at (\graphTensorTwoStart + 6*\graphLineSpacing,\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myOrange,label=above right:$Y$] (Y1) at (\graphTensorTwoStart + 6*\graphLineSpacing,-\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (\graphTensorTwoStart,\graphLineSpacing) -- (\graphTensorTwoStart + \graphLineSpacing,\graphLineSpacing) ;
+	\draw[thick, dotted] (\graphTensorTwoStart + \graphLineSpacing,\graphLineSpacing) -- (X) -- (k) -- (X1) -- (\graphTensorTwoStart + 7*\graphLineSpacing,\graphLineSpacing) {};
+	\draw[thick, draw=black] (\graphTensorTwoStart + 7*\graphLineSpacing,\graphLineSpacing) -- (\graphTensorTwoStart + 8*\graphLineSpacing,\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (\graphTensorTwoStart,-\graphLineSpacing) -- (\graphTensorTwoStart + \graphLineSpacing,-\graphLineSpacing) {};
+	\draw[thick, dotted] (\graphTensorTwoStart + \graphLineSpacing,-\graphLineSpacing) -- (Y) -- (tk) -- (Y1) -- (\graphTensorTwoStart + 7*\graphLineSpacing,-\graphLineSpacing) {};
+	\draw[thick, draw=black] (\graphTensorTwoStart + 7*\graphLineSpacing,-\graphLineSpacing) -- (\graphTensorTwoStart + 8*\graphLineSpacing,-\graphLineSpacing) {};
+\end{tikzpicture}
+\]
