@@ -1,0 +1,39 @@
+\begin{filecontents*}{data/data1.csv}
+	Size,TensorStencil,Devito,Error
+	50,0.005018,0.007894,0.000002
+	100,0.02809,0.076949,0.000003
+	150,0.101568,0.205237,0.000006
+	200,0.237379,0.549409,0.000009
+	250,0.477033,1.323531,0.000012
+	300,0.845301,2.743135,0.000004
+	350,1.40546,5.197527,0.000045
+	400,2.103525,8.888937,0.000014
+	450,3.000352,14.547453,0.000027
+	500,4.309026,22.966639,0.000013
+	550,5.708703,34.023224,0.000044
+	600,7.549911,50.373158,0
+	650,10.571026,73.569817,0.000031
+	700,15.045691,108.983444,0.000016
+	750,16.388805,133.701202,0.000034
+	800,21.642071,177.168427,0.000028
+	850,24.640459,235.159698,0.000029
+	900,30.80517,297.78067,0.00003
+	950,38.120262,377.148132,0.000028
+	1000,44.858974,469.869049,0.000045
+\end{filecontents*}
+
+\begin{tikzpicture}
+	\begin{axis} [ymode=log,ymax = 1000,xmax = 1050, ylabel={time},xlabel={size and iterations},legend pos=south east]
+	\addplot table [x=Size,y=Devito, col sep=comma] {data/data1.csv};
+	\addplot table [x=Size,y=TensorStencil, col sep=comma] {data/data1.csv};
+	\addlegendentry{Devito}
+	\addlegendentry{Custom}
+	\end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+	\begin{axis} [ylabel={percent error},xlabel={size and iterations},legend pos=south east]
+	\addplot table [x=Size,y=Error, col sep=comma] {data/data1.csv};
+	\addlegendentry{L2 Norm}
+	\end{axis}
+\end{tikzpicture}

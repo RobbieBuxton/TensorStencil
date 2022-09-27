@@ -19,9 +19,9 @@
 int main(int argc, char *argv[])
 {
 	int iterations = 1;
-	int size_start = 600;
+	int size_start = 500;
 	int size_step = 25;
-	int time_steps_start = 600;
+	int time_steps_start = 500;
 	int time_steps_step = 0;
 	float *times = malloc(sizeof(float) * 2 * iterations);
 	float *norm_error = malloc(sizeof(float) * iterations);

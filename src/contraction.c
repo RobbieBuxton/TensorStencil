@@ -53,7 +53,22 @@ struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct t
 
 	int array_size = pow(n, new_dimension);
 
-	cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans, n, n*n, n, 1.0, tensor_a->array, n, tensor_b->array, n, 0.0, result->array, n*n);
+	//cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans, n, n*n, n, 1.0, tensor_a->array, n, tensor_b->array, n, 0.0, result->array, n*n);
+	cblas_ssymm(CblasColMajor,CblasLeft, CblasUpper, n, n*n, 1.0, tensor_a->array, n, tensor_b->array, n, 0.0, result->array, n);
+
+/* void cblas_ssymm(OPENBLAS_CONST enum CBLAS_ORDER Order,
+										OPENBLAS_CONST enum CBLAS_SIDE Side,
+										OPENBLAS_CONST enum CBLAS_UPLO Uplo,
+										OPENBLAS_CONST blasint M, 
+										OPENBLAS_CONST blasint N,
+										OPENBLAS_CONST float alpha, 
+										OPENBLAS_CONST float *A, 
+										OPENBLAS_CONST blasint lda, 
+										OPENBLAS_CONST float *B, 
+										OPENBLAS_CONST blasint ldb, 
+										OPENBLAS_CONST float beta, 
+										float *C, 
+										OPENBLAS_CONST blasint ldc); */
 
 	// for (int i = 0; i < array_size; i++)
 	// {

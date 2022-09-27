@@ -3,12 +3,21 @@
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithmic}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{caption}
+\usepackage{algpseudocode}
+\usepackage{accents}
+\usepackage{pgfplots}
+\usepackage{filecontents}  
+\usepackage{listings}
+
+\usetikzlibrary{matrix}
+
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -30,48 +39,69 @@
 
 \maketitle
 
-\begin{abstract}
-Todo
-\end{abstract}
+% \begin{abstract}
 
-\begin{IEEEkeywords}
-Todo
-\end{IEEEkeywords}
+% \end{abstract}
+
+% \begin{IEEEkeywords}
+% Todo
+% \end{IEEEkeywords}
 
 
-\section{Introduction}
-Todo (Make better use of tensor cores/gpu matrix multipliers for stencil computation)
-\section{Method}
-I propose an alternative to the classical iterative loop method for stencil computation. 
-Using the emergent properties of the transformation matrices use to represent stencil time step update we can calculate the state of input data after an arbitrary number of time steps. 
+\section{Abstract}
+We propose an alternative to the classical iterative loop method for stencil computation. 
+Using tensors contractions use to represent stencil time step updates we can calculate the state of input data after an arbitrary number of time steps in a single pass. 
+The algorithm can make better use of recent TPU/GPU developments as it is primarily time bound by two groups of matrix multiplications. 
+\\ \\ This leads to an algorithm that is a for an $k$ dimensional stencil computing $t$ timesteps $O(n^{k+1})$ as opposed to classical loop algorithms which are $O(n^{k}t)$.
+Tests show on last page that the algorithm can outperform a classical loop implementation $10\times$ times
+\\
+% \section{Introduction}
+% Todo (Make better use of tensor cores/gpu matrix multipliers for stencil computation)
+% \section{Method}
+% I propose an alternative to the classical iterative loop method for stencil computation. 
+% Using the emergent properties of the transformation matrices use to represent stencil time step update we can calculate the state of input data after an arbitrary number of time steps. 
 
-SOURCE THE PAPER BEFORE THE DIAGRAM \\
-
+\subsection{Representing a stencil as matrix multiplications}
 \input{diagrams/stencil_split.tex} \\
 \input{diagrams/vertical_stencil_to_toeplitz.tex} \\
 \input{diagrams/horizontal_stencil_to_toeplitz.tex} \\
 \input{diagrams/matrix_iteration.tex} \\
+\clearpage
+\subsection{Representing a stencil as tensors}
 \input{diagrams/tensor_diagram_notation.tex} \\
 \input{diagrams/tensor_two_d_generic_iteration.tex}
 \input{diagrams/tensor_two_d_two_iteration.tex}
 \input{diagrams/tensor_two_d_t_iteration.tex}
 \input{diagrams/tensor_three_d_t_iteration.tex}
 \input{diagrams/tensor_n_d_t_iteration.tex}
+\clearpage
+\subsection{eigendecomposition of toeplitz matrices}
 \input{diagrams/matrix_eigen_decomposition.tex}
 \input{diagrams/tensor_eigen_decomposition.tex}
 \input{diagrams/tensor_n_eigen_decomposition.tex} \\ \\ \\ 
-This equation is incorrect there should be a sum inside the right hand brackets as it's eigen values plus each other not times v v v\\
+\clearpage
+\subsection{Hadamard product}
+
+$\circ$ the Hadamard Product means ${(A \circ B)}_{ij} = (A)_{ij} (B)_{ij}$ \\ 
+
 \input{diagrams/sumation_hadamard_identity.tex} 
+\clearpage
+\subsection{3D Formula}
 \input{diagrams/3d_complete_tensor_stencil.tex}
+\input{diagrams/eigen_scale.tex}
+
+\clearpage
+\subsection{Generalized Formula}
 \input{diagrams/nd_complete_tensor_stencil.tex}
 
+\include{diagrams/graphs.tex}
 
-\section{Proof}
+% \section{Proof}
 
-Todo
-\section{Complexity}
-Todo
-\section{Results}
-Todo
+% Todo
+% \section{Complexity}
+% Todo
+% \section{Results}
+% Todo
 
 \end{document}
