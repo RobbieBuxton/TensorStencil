@@ -18,11 +18,11 @@
 
 int main(int argc, char *argv[])
 {
-	int iterations = 1;
+	int iterations = 19;
 	int size_start = 500;
-	int size_step = 25;
-	int time_steps_start = 500;
-	int time_steps_step = 0;
+	int size_step = 0;
+	int time_steps_start = 50;
+	int time_steps_step = 50;
 	float *times = malloc(sizeof(float) * 2 * iterations);
 	float *norm_error = malloc(sizeof(float) * iterations);
 
@@ -58,7 +58,7 @@ int test(float *times, float* norm_error, int data_size, int time_steps)
 	// Must be odd (only 3 supported atm)
 	int stencil_size = 3;
 
-	int enable_devito = 0;
+	int enable_devito = 1;
 
 	printf("\n######################\nNEW TEST\nDim: %d Size %d Time Steps %d\n\n",dimension, data_size, time_steps);
 
