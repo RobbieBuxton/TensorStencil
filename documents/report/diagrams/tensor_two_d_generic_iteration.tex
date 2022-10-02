@@ -1,0 +1,16 @@
+\begin{tikzpicture}
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A_{t+1}$] (ATT) at (0,0) {};
+	\node[circle,draw=black!80,thick,fill=black,label=left:${=}A_{t}$] (AT) at (\graphTensorTwoStart,0) {};
+	\node[circle,draw=black!80,thick,fill=myGreen,label=above right:$X$] (X) at (\graphTensorTwoStart + \graphLineSpacing,\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=black,label=left:$+A_{t}$] (A) at (\graphTensorThreeStart,0) {};
+	\node[circle,draw=black!80,thick,fill=myOrange,label=above right:$Y$] (Y) at (\graphTensorThreeStart + \graphLineSpacing,-\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (ATT) -- (0,\graphLineSpacing) -- (\graphLineSpacing,\graphLineSpacing) {};
+	\draw[thick, draw=black] (ATT) -- (0,-\graphLineSpacing) -- (\graphLineSpacing,-\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (\graphTensorTwoStart,\graphLineSpacing) -- (X) -- (\graphTensorTwoStart + 2*\graphLineSpacing,\graphLineSpacing) {};
+	\draw[thick, draw=black] (AT) -- (\graphTensorTwoStart,-\graphLineSpacing) -- (\graphTensorTwoStart + \graphLineSpacing, -\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (A) -- (\graphTensorThreeStart,\graphLineSpacing) -- (\graphTensorThreeStart + \graphLineSpacing,\graphLineSpacing) {};
+	\draw[thick, draw=black] (A) -- (\graphTensorThreeStart,-\graphLineSpacing) -- (Y) -- (\graphTensorThreeStart + 2*\graphLineSpacing,-\graphLineSpacing) {};
+\end{tikzpicture}

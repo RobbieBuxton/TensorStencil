@@ -1,0 +1,38 @@
+\renewcommand{\gridCellWidth}{0.5}
+\renewcommand{\gridWidth}{\gridCellWidth*5}
+
+
+\[
+\left(
+\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$I$] (I1) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_{X}$] (X1) at (0 + 1*\graphLineSpacing,0) {};
+	\draw[thick] (0 + 1*\graphLineSpacing - 0.2,0 + 0.2) -- (0 + 1*\graphLineSpacing + 0.2,0 - 0.2) {};
+
+	\draw[thick, draw=black] (I1) -- (0,0) --  (X1) -- (0 + 2*\graphLineSpacing,0) {};
+	\draw[thick, draw=black, label=above:] (I1)  -- (0 + 1*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick, draw=black] (I1) --  (0,-4*\graphLineSpacing) -- (0 + 1*\graphLineSpacing,-4*\graphLineSpacing) {};
+
+	\node[circle,draw=black!80,thick,fill=black,label=left:$I$] (I2) at (\graphTensorSpacing,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_{Y}$] (X2) at (\graphTensorSpacing + 1*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick] (\graphTensorSpacing + 1*\graphLineSpacing - 0.2,-2*\graphLineSpacing + 0.2) -- (\graphTensorSpacing + 1*\graphLineSpacing + 0.2,-2*\graphLineSpacing - 0.2) {};
+
+	\draw[thick, draw=black] (I2) -- (\graphTensorSpacing,0) --  (\graphTensorSpacing + 1*\graphLineSpacing,0) {};
+	\draw[thick, draw=black, label=above:] (I2) -- (X2) -- (\graphTensorSpacing + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick, draw=black] (I2) --  (\graphTensorSpacing,-4*\graphLineSpacing) -- (\graphTensorSpacing + 1*\graphLineSpacing,-4*\graphLineSpacing) {};
+
+	\node[circle,draw=black!80,thick,fill=black,label=left:$I$] (I3) at (2.25*\graphTensorSpacing,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_{Z}$] (X3) at (2.25*\graphTensorSpacing + 1*\graphLineSpacing,-4*\graphLineSpacing) {};
+	\draw[thick] (2.25*\graphTensorSpacing + 1*\graphLineSpacing - 0.2,-4*\graphLineSpacing + 0.2) -- (2.25*\graphTensorSpacing + 1*\graphLineSpacing + 0.2,-4*\graphLineSpacing - 0.2) {};
+
+	\draw[thick, draw=black] (I3) -- (2.25*\graphTensorSpacing,0) --  (2.25*\graphTensorSpacing + 1*\graphLineSpacing,0) {};
+	\draw[thick, draw=black, label=above:] (I3) --  (2.25*\graphTensorSpacing + 1*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick, draw=black] (I3) --  (2.25*\graphTensorSpacing,-4*\graphLineSpacing) -- (X3) -- (2.25*\graphTensorSpacing + 2*\graphLineSpacing,-4*\graphLineSpacing) {};
+	
+	\node (plus1) at (1.85*\graphTensorSpacing,-2*\graphLineSpacing) {\large +};
+	\node (plus2) at (0.6*\graphTensorSpacing,-2*\graphLineSpacing) {\large +};
+
+\end{tikzpicture}
+\right)^{\circ t}_{i,j,k}
+= (({\Lambda_X})_{i,i} + ({\Lambda_Y}_{j,j}) + ({\Lambda_Z}_{k,k}))^t
+\]

@@ -1,0 +1,86 @@
+\begin{filecontents*}{data/data1.csv}
+	Size,TensorStencil,Devito,Error
+	50,0.005018,0.007894,0.000002
+	100,0.02809,0.076949,0.000003
+	150,0.101568,0.205237,0.000006
+	200,0.237379,0.549409,0.000009
+	250,0.477033,1.323531,0.000012
+	300,0.845301,2.743135,0.000004
+	350,1.40546,5.197527,0.000045
+	400,2.103525,8.888937,0.000014
+	450,3.000352,14.547453,0.000027
+	500,4.309026,22.966639,0.000013
+	550,5.708703,34.023224,0.000044
+	600,7.549911,50.373158,0
+	650,10.571026,73.569817,0.000031
+	700,15.045691,108.983444,0.000016
+	750,16.388805,133.701202,0.000034
+	800,21.642071,177.168427,0.000028
+	850,24.640459,235.159698,0.000029
+	900,30.80517,297.78067,0.00003
+	950,38.120262,377.148132,0.000028
+	1000,44.858974,469.869049,0.000045
+\end{filecontents*}
+
+\begin{filecontents*}{data/data2.csv}
+	Size,TensorStencil,Devito,Error
+	50, 4.228271, 2.330200, 0.000001
+	100, 4.392849, 4.588415, 0.000002
+	150, 4.994750, 6.917814, 0.000003
+	200, 4.188376, 9.386390, 0.000005
+	250, 4.201744, 11.542141, 0.000006
+	300, 4.927461, 13.890500, 0.000008
+	350, 4.236063, 16.138432, 0.000009
+	400, 4.302618, 18.459612, 0.000010
+	450, 4.222175, 20.967630, 0.000012
+	500, 4.307445, 23.298811, 0.000013
+	550, 4.325422, 25.430765, 0.000014
+	600, 4.216995, 28.123375, 0.000016
+	650, 5.049333, 33.346359, 0.000017
+	700, 4.539420, 33.367851, 0.000018
+	750, 4.260931, 34.197765, 0.000020
+	800, 4.310477, 37.090954, 0.000021
+	850, 4.264150, 41.915268, 0.000023
+	900, 4.312349, 41.698330, 0.000024
+	950, 4.245051, 44.506187, 0.000025
+\end{filecontents*}
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+	\begin{tikzpicture}
+		\begin{axis} [ymode=log,ymax = 1000,xmax = 1050, ylabel={time},xlabel={size and iterations},legend pos=south east]
+		\addplot table [x=Size,y=Devito, col sep=comma] {data/data1.csv};
+		\addplot table [x=Size,y=TensorStencil, col sep=comma] {data/data1.csv};
+		\addlegendentry{Devito}
+		\addlegendentry{TensorStencil}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Size and Iterations Graph}
+	\end{mdframed}
+\end{figure}
+The percent error of the L2 norm of the final data of tensor stencil and the Devito result
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+	\begin{tikzpicture}
+		\begin{axis} [ylabel={percent error},xlabel={size and iterations},legend pos=south east]
+		\addplot table [x=Size,y=Error, col sep=comma] {data/data1.csv};
+		\addlegendentry{L2 Norm}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Error Graph}
+	\end{mdframed}
+\end{figure}
+For a $500^3$ data set comparing increasing iterations for Devito and TensorStencil
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+	\begin{tikzpicture}
+		\begin{axis} [ymode=log,ymax = 100,xmax = 1050, ylabel={time},xlabel={iterations},legend pos=south east]
+		\addplot table [x=Size,y=Devito, col sep=comma] {data/data2.csv};
+		\addplot table [x=Size,y=TensorStencil, col sep=comma] {data/data2.csv};
+		\addlegendentry{Devito}
+		\addlegendentry{TensorStencil}
+		\end{axis}
+	\end{tikzpicture}
+	\caption{Iterations graph}
+	\end{mdframed}
+\end{figure}

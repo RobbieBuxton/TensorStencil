@@ -1,0 +1,403 @@
+\documentclass{article}
+% \IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{mdframed}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{caption}
+\usepackage{algpseudocode}
+\usepackage{accents}
+\usepackage{pgfplots}
+\usepackage{filecontents}  
+\usepackage{listings}
+
+\usetikzlibrary{matrix}
+
+\newcommand{\gridCellWidth}{0.3}
+\newcommand{\gridSize}{7}
+\newcommand{\gridSpacing}{0.9}
+\newcommand{\gridWidth}{\gridSize*\gridCellWidth}
+
+\newcommand{\gridAxisHorizontalCellColour}{myGreen}
+\newcommand{\gridAxisVerticalCellColour}{myOrange}
+\newcommand{\gridAxisMiddleColour}{myYellow}
+\newcommand{\gridTwoStart}{\gridWidth + \gridSpacing}
+\newcommand{\gridThreeStart}{2*\gridWidth + 2*\gridSpacing}
+
+\newcommand{\graphLineSpacing}{0.5}
+\newcommand{\graphTensorSpacing}{1}
+\newcommand{\graphTensorTwoStart}{1.5*\graphTensorSpacing}
+\newcommand{\graphTensorThreeStart}{\graphTensorTwoStart+ 2*\graphTensorSpacing}
+\newcommand{\graphTensorFourStart}{\graphTensorThreeStart+ 2*\graphTensorSpacing}
+
+% \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\definecolor{myGreen}{RGB}{95,173,86}
+\definecolor{myYellow}{RGB}{242,193,78}
+\definecolor{myOrange}{RGB}{247,129,84}
+\definecolor{myBlue}{RGB}{118,146,255}
+\definecolor{myBrown}{RGB}{90,42,39}
+\definecolor{myGrey}{RGB}{238, 228, 225}
+\definecolor{myFigureColour}{RGB}{240, 240, 240}
+
+\title{TensorStencil Report}
+
+% \author{\IEEEauthorblockN{Robert Buxton}
+% \IEEEauthorblockA{rb419@ic.ac.uk}}
+
+\maketitle
+
+% \begin{abstract}
+
+% \end{abstract}
+
+% \begin{IEEEkeywords}
+% Todo
+% \end{IEEEkeywords}
+
+
+\section{Abstract}
+We propose an alternative to the ADD METHODS method for stencil computation.
+Using tensors contractions use to represent stencil time step updates we can calculate the state of input data after an arbitrary number of time steps in a single pass.
+The algorithm can make better use of recent TPU/GPU developments as it is primarily time bound by two groups of matrix multiplications.
+\\ \\ This leads to an algorithm that is a for an $k$ dimensional stencil computing $t$ timesteps $O(n^{k+1})$ as opposed to classical loop algorithms which are $O(n^{k}t)$.
+
+\section{Background}
+
+Stencil computations are a crucial part of many high performance computing problems like neural networks, finite difference equation solvers, image processing and many more.
+A stencil computation is an iterative process where an update pattern which represents a relationship between nodes is applied to an N dimensional array for a finite number of timesteps.
+\\ \\ An example of an application of stencil computations would be the heat equation. 
+Let's say we want to simulate heat dissipating through a 1D rod. 
+What we can do is represent this rod as an array of infinitesimally small segments which temperature each correspond to an array values. \\ 
+\[ [a_1,a_2,a_3,\cdots,a_n]\] 
+where n is the length of the rod. \\ \\
+Let's say every time step each node is updated to have the value of 0.8 times it's old value and 0.1 times the value of it's two neighbours.
+This means that after 1 time step our array would look like.
+
+\[ [0.8 a_1 + 0.1 a_2 , 0.1 a_1 + 0.8 a_2+ 0.1 a_3, 0.1 a_2 + 0.8 a_3 + 0.1a_5,\cdots,0.1a_{n-1}+0.8a_n]\] \\
+
+As an algorithm this would be represented as 
+
+\begin{algorithm}[H]
+	\caption{1D stencil}\label{euclid}
+	\begin{algorithmic}[1]
+	\State $\textit{data}[2][n];$
+	\State $\text{init\_data}(\textit{data}[0])$ 
+	\For{$i = 1; i < n-1; i \mathrel{+}= 1$}
+	\State $\textit{data}[(i+1)\%2][i] = 0.1*data[i\%2][i-1] + 0.6*data[i\%2][i] + 0.1*data[i\%2][i+1]$ 
+	\EndFor \\
+	\end{algorithmic}
+\end{algorithm}
+
+Where data is copyied between two arrays back and forth each timestep. 
+
+This method can be expanded to arbitrary time steps.
+ 
+
+\section{Introduction}
+% Todo (Make better use of tensor cores/gpu matrix multipliers for stencil computation)
+% \section{Method}
+% I propose an alternative to the classical iterative loop method for stencil computation. 
+% Using the emergent properties of the transformation matrices use to represent stencil time step update we can calculate the state of input data after an arbitrary number of time steps. 
+
+\subsection{Representing a stencil as matrix multiplications}
+
+The first step we need to take is to represent the star stencil loop in terms of a matrices multiplications.
+This isn't very difficult as any star stencil can just be broken down into a individual transformation matrix for each of it's dimensions \cite{10.1145/3524059.3532392}.
+The example below is for a 2D 5 wide star stencil. \\
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/stencil_split.tex} \\
+		\input{diagrams/vertical_stencil_to_toeplitz.tex} \\
+		\input{diagrams/horizontal_stencil_to_toeplitz.tex}
+		\caption{Breaking a stencil down into matrix transformations}
+	\end{mdframed}
+\end{figure}
+
+In 2D a single time step iteration can be represented as a left side matrix multiplication of the Y stencil transformation added to a right side matrix multiplication of the X transformation (which is transposed) \\
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/matrix_iteration.tex}
+		\caption{A 2D stencil timestep update in matrix form}
+		\label{stencil timestep}
+	\end{mdframed}
+\end{figure}
+
+\subsection{Representing a stencil as tensors}
+
+Before switching to higher dimensional stencils we must first introduce a new notation as we begin to deal with tensors.
+If you are not familiar with tensors you can (with caveats) just think of them as matrices in higher dimensions. A 1D tensor is a vector, A 2D tensor is a matrix and a tensor contraction between two 2d tesnors is just a matrix multiplication (if on the correct indices, otherwise it is a transposed multiplication) \\
+
+A tensor contraction of the form $\sum_j M_{ij}N_{jkl}$ can be notated as \\
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/tensor_diagram_notation.tex}
+		\caption{An example in tensor diagram notation}
+	\end{mdframed}
+\end{figure}
+
+in \href{http://tensornetwork.org/diagrams/}{Tensor Diagram Notation} \\
+
+Using this notation we can express Figure \ref{stencil timestep} in terms of tensors
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/tensor_two_d_generic_iteration.tex}
+		\caption{A 2D stencil timestep update in tensor form}
+		\label{tensor timestep}
+	\end{mdframed}
+\end{figure}
+
+By self substitution of Figure \ref{tensor timestep} one time we can show two time steps as
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/tensor_two_d_two_iteration.tex}
+		\caption{A 2D stencil timestep updatde twice}
+	\end{mdframed}
+\end{figure}
+
+If you repeat this indefinitely you end up with the generalized form.
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/tensor_two_d_t_iteration.tex}
+		\caption{A 2D stencil timestep updated t times}
+		\label{tensor timestep 2D}
+	\end{mdframed}
+\end{figure}
+
+This can be generalized to 3D and ND in Fig \ref{tensor timestep 3D} and Fig \ref{tensor timestep ND} respectively.
+
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/tensor_three_d_t_iteration.tex}
+		\caption{A 3D stencil timestep updated t times}
+		\label{tensor timestep 3D}
+	\end{mdframed}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/tensor_n_d_t_iteration.tex}
+		\caption{A ND stencil timestep updated t times}
+		\label{tensor timestep ND}
+	\end{mdframed}
+\end{figure}
+
+\subsection{eigendecomposition of toeplitz matrices}
+
+Before moving onto simplifications we can make to the tensor expression we have in Fig \ref{tensor timestep 2D} - \ref{tensor timestep ND} we must look into how we can eigendecompose the transformation matrices we apply to each dimension.
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+		\input{diagrams/matrix_eigen_decomposition.tex}
+		\caption{A ND stencil timestep updated t times}
+	\end{mdframed}
+\end{figure}
+
+You can eigendecompose a tridiagonal toeplitz analytically and higher orders can be done incrementally \cite{bogoya2022fast},
+The eigendecomposition for tridiagonal toeplitz matrices that arise from 3 wide stencils is as follows \cite{noschese2013tridiagonal}.
+
+
+\[ i,j = 1:n\]
+\[ {Q_X}_{i,i} = \frac{m}{2} + 2\sqrt{x1 x2}\cos{\frac{i\pi}{n+1}}\]
+\[ {\Lambda_X}_{i,j} = (\frac{x1}{x2})^{\frac{j}{2}}\sin{\frac{ij\pi}{n+1}} \]
+
+This eigendecomposition can be represented in tensor graph notation.
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+	\input{diagrams/tensor_eigen_decomposition.tex}
+	\caption{A tensor eigendecomposition}
+\end{mdframed}
+\end{figure}
+
+Sequential matrix transformations by the same matrix can be eigendecomposed simply
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+	\input{diagrams/tensor_n_eigen_decomposition.tex}
+	\caption{A tensor eigendecomposition to the power of i}
+	\label{tensor i}
+\end{mdframed}
+\end{figure}
+
+This is because sequential $Q_X$ and $Q_X^{-1}$ cancel out.
+
+\subsection{Hadamard product}
+
+Before going any further we need to introduce the Hadamard product operator.
+On a given tensor it is just an element wise multiplication. \\
+
+$\circ$ the Hadamard Product means ${(A \circ B)}_{ij} = (A)_{ij} (B)_{ij}$ \\
+
+Below is a useful identity which I have proved in 2D but not yet for higher dimensions. 
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+	\input{diagrams/sumation_hadamard_identity.tex}
+	\caption{The Hadamard Product simplification}
+	\label{hadamard product}
+	\end{mdframed}
+\end{figure}
+
+\subsection{Generalized Formula}
+
+By taking \ref{tensor timestep 3D} and substituting in Fig \ref{tensor i} and the Fig \ref{hadamard product} identity we get a simplified form of how to calculate t timesteps for a given input data set.
+
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+	\input{diagrams/3d_complete_tensor_stencil.tex}
+	\input{diagrams/eigen_scale.tex}
+	\caption{Generalized 3D formula}
+	\end{mdframed}
+\end{figure}
+
+This can be generalized to n dimensions
+\begin{figure}[H]
+	\begin{mdframed}[backgroundcolor=myFigureColour]
+	\input{diagrams/nd_complete_tensor_stencil.tex}
+	\caption{Generalized ND formula}
+	\end{mdframed}
+\end{figure}
+
+\section{Code Overview}
+
+\begin{algorithm}[H]
+	\caption{TensorStencil}\label{euclid}
+	\begin{algorithmic}[1]
+	\State $\textit{data}[n_1][n_2]..[n_k] \gets \cdots$ 
+	\State $\textit{stencil}[k][2r+1] \gets \cdots$ \\
+	\State $\textit{tensors}[k] = \texttt{convert\_stencil\_to\_transformations}(\textit{stencil})$
+	\State $\textit{basis\_in}[k],\textit{eigen\_vals}[k], \textit{basis\_out}[k] = \texttt{eigen\_decompose}(\textit{tensors})$ \\
+	\State $\textit{transformed\_data} = \texttt{tensor\_contract}(\textit{basis\_out},\textit{data})$ \\
+	\For{$i_1 = 0; i_1 < n_1; i_1 \mathrel{+}= 1$}
+	\For{$i_2 = 0; i_2 < n_2; i_2 \mathrel{+}= 1$}
+	\State $\cdots$
+	\For{$i_k = 0; i_k < n_k; i_k \mathrel{+}= 1$}
+	\State $\textit{eigen\_scaled\_data}[i_1][i_2]\cdots[i_k] = $
+	\State $\quad \textit{transformed\_data}[i_1][i_2]\cdots[i_k] \times $
+	\State $\quad \quad (\textit{eigen\_vals}[0][i_1] + $
+	\State $\quad \quad \textit{eigen\_vals}[1][i_2] + $
+	\State $\quad \quad \cdots$
+	\State $\quad \quad \textit{eigen\_vals}[k-1][i_k])^{\textit{time\_steps}}$
+	\EndFor 
+	\State $\cdots$
+	\EndFor 
+	\EndFor \\
+	\State $\textit{result} = \texttt{tensor\_contract}(\textit{basis\_out},\textit{eigen\_scaled\_data})$
+	\end{algorithmic}
+\end{algorithm}
+
+\section{Results}
+\include{diagrams/graphs.tex}
+
+% Todo
+\section{Complexity and speed}
+This algorithm has complexity $O(n^{d-2} M)$ where M is the complexity of a matrix multiplication, n is the size of the data in one dimension and d is the number of dimensions (assumming all dimensions are the same size here). 
+The algorithm is effectively bound by the time required to compute 2 sets of matrix multiplications (at worst $n^3$). The last sat which is highly likely to be sparse. \\ \\
+As $t$ gets each value in the middle stage between the two sets of tensor contraction used in the hadamard product $\rightarrow \in \{- \infty, -1, 0, 1, \infty\}$ which typically leads to a sparse matrix. 
+which results in a performance speed up as $t$ increases.\\ \\
+The algorithm currently uses non-sparse BLAS libraries for the matrix multiplications which is at worst $O(n^3)$. 
+I plan to experiment with sparseBLAS libaries in the future after a sufficient number of time steps.  \\ \\
+Calculating the hadamard product is done in $O(d^3)$ as taking large exponents is effectively in constant time. 
+This means the algorithm is invariant under $t$. \\ \\ 
+Currently, calculating the eigenvalues and eigenvectors is done in $O(n^2)$ time for each tranformation maatrix using the algorithm from \cite{noschese2013tridiagonal}.
+From a quick skim read of \cite{bogoya2022fast} you can quickly calculate the eigenvalues and vectors of non tridiagonal Toeplitz 
+matrices that would arise from stencils with a width greater than 3. \\ \\
+For $N$ dimensions $n$ Toeplitz matrices need to be diagonalized, if the matrices are the same the result can be reused. 
+
+
+\section{Current problems}
+When an axis is not symmetrical. I.e $\sigma \neq \tau$ after a matrix gets above about $25 \times 25$ in size we start to have a max float issue. This comes from the eigen decomposition of each axis transformation. The example below if a generic decomposition of a tridiagonal toeplitz matrix. 
+\begin{flalign*}
+\begin{bmatrix}
+	\delta & \tau & & & & & O \\
+	\sigma  & \delta & \tau & & & &\\
+	& \sigma & . &  . & & & \\
+	& & . & . &  . & & \\
+	& & & . & . &  . & \\
+	& & & & . & .& \tau \\
+	O & & & & & \sigma & \delta
+\end{bmatrix} &= k X \Lambda X^{-1}
+\end{flalign*}
+\begin{flalign*}
+X &= 
+\begin{bmatrix}
+	\frac{\sigma}{\tau}^{\frac{1}{2}}\sin{\frac{\pi}{n+1}} & \frac{\sigma}{\tau}^{\frac{1}{2}}\sin{\frac{2\pi}{n+1}} & . & . &\frac{\sigma}{\tau}^{\frac{1}{2}}\sin{\frac{n\pi}{n+1}}\\
+	\frac{\sigma}{\tau}^{\frac{2}{2}}\sin{\frac{2\pi}{n+1}} & \frac{\sigma}{\tau}^{\frac{2}{2}}\sin{\frac{4\pi}{n+1}}& . & . &\frac{\sigma}{\tau}^{\frac{2}{2}}\sin{\frac{2n\pi}{n+1}}\\
+	. & . & . & . & . \\
+	. & . & . & . & . \\
+	\frac{\sigma}{\tau}^{\frac{n}{2}}\sin{\frac{n\pi}{n+1}} & \frac{\sigma}{\tau}^{\frac{n}{2}}\sin{\frac{2n\pi}{n+1}} & . & . &\frac{\sigma}{\tau}^{\frac{n}{2}}\sin{\frac{n^2\pi}{n+1}}
+\end{bmatrix} &&\\
+&= 
+\begin{bmatrix}
+	\frac{\sigma}{\tau}^{\frac{1}{2}} & & & & O \\
+	& \frac{\sigma}{\tau}^{\frac{2}{2}} & & & \\
+	& & . & & \\
+	& & & . & \\
+	O & & & & \frac{\sigma}{\tau}^{\frac{n}{2}} \\
+\end{bmatrix}
+\begin{bmatrix}
+	\sin{\frac{\pi}{n+1}} & \sin{\frac{2\pi}{n+1}} & . & . & \sin{\frac{n\pi}{n+1}}\\
+	\sin{\frac{2\pi}{n+1}} & \sin{\frac{4\pi}{n+1}}& . & . & \sin{\frac{2n\pi}{n+1}}\\
+	. & . & . & . & . \\
+	. & . & . & . & . \\
+	\sin{\frac{n\pi}{n+1}} & \sin{\frac{2n\pi}{n+1}} & . & . & \sin{\frac{n^2\pi}{n+1}}
+\end{bmatrix}
+\end{flalign*}
+\begin{flalign*}
+X^{-1} &= 
+\begin{bmatrix}
+	\frac{\tau}{\sigma}^{\frac{1}{2}}\sin{\frac{\pi}{n+1}} & \frac{\tau}{\sigma}^{\frac{1}{2}}\sin{\frac{2\pi}{n+1}} & . & . &\frac{\tau}{\sigma}^{\frac{1}{2}}\sin{\frac{n\pi}{n+1}}\\
+	\frac{\tau}{\sigma}^{\frac{2}{2}}\sin{\frac{2\pi}{n+1}} & \frac{\tau}{\sigma}^{\frac{2}{2}}\sin{\frac{4\pi}{n+1}}& . & . &\frac{\tau}{\sigma}^{\frac{2}{2}}\sin{\frac{2n\pi}{n+1}}\\
+	. & . & . & . & . \\
+	. & . & . & . & . \\
+	\frac{\tau}{\sigma}^{\frac{n}{2}}\sin{\frac{n\pi}{n+1}} & \frac{\tau}{\sigma}^{\frac{n}{2}}\sin{\frac{2n\pi}{n+1}} & . & . &\frac{\tau}{\sigma}^{\frac{n}{2}}\sin{\frac{n^2\pi}{n+1}}
+\end{bmatrix}^T &&\\
+&= 
+\begin{bmatrix}
+	\sin{\frac{\pi}{n+1}} & \sin{\frac{2\pi}{n+1}} & . & . & \sin{\frac{n\pi}{n+1}}\\
+	\sin{\frac{2\pi}{n+1}} & \sin{\frac{4\pi}{n+1}}& . & . & \sin{\frac{2n\pi}{n+1}}\\
+	. & . & . & . & . \\
+	. & . & . & . & . \\
+	\sin{\frac{n\pi}{n+1}} & \sin{\frac{2n\pi}{n+1}} & . & . & \sin{\frac{n^2\pi}{n+1}}
+\end{bmatrix}
+\begin{bmatrix}
+	\frac{\tau}{\sigma}^{\frac{1}{2}} & & & & O \\
+	& \frac{\tau}{\sigma}^{\frac{2}{2}} & & & \\
+	& & . & & \\
+	& & & . & \\
+	O & & & & \frac{\tau}{\sigma}^{\frac{n}{2}} 
+\end{bmatrix}
+\end{flalign*}
+\begin{flalign*}
+\Lambda &= 
+\begin{bmatrix}
+	\delta + 2 \sqrt{\sigma\delta} \cos \frac{\pi}{n+1} & & & & O \\
+	& \delta + 2 \sqrt{\sigma\delta} \cos \frac{2\pi}{n+1} & & & \\
+	& & . & & \\
+	& & & . & \\
+	O & & & & \delta + 2 \sqrt{\sigma\delta} \cos \frac{n\pi}{n+1}
+\end{bmatrix} &&
+\end{flalign*}
+As you can see each row of $X$ and column of $X^-1$ is multiplied by $\frac{\tau}{\sigma}^k$ for some $k$. 
+As k gets extremely large this will either zero out the row or move it to a max float/overflow (This is not a problem if the axis is symmetrical as $\frac{\tau}{\sigma} = 1$).
+This would be easy to fix if these was done in isolation however we need to use $X^1$ and $X^-1$ in separate computations, so we can't combine them to cancel each other out easily. 
+\bibliographystyle{ieeetr}
+\bibliography{citation}
+
+\end{document}

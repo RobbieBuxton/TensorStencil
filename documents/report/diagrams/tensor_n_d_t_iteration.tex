@@ -1,0 +1,45 @@
+\renewcommand{\graphTensorSpacing}{1}
+\[
+\begin{tikzpicture}[baseline=-7ex]
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A_{t}$] (ATT) at (0,-2*\graphLineSpacing) {};
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+	\draw[thick, draw=black] (ATT) -- (0,0) -- (\graphLineSpacing,0) {};
+	\draw[thick, draw=black] (ATT) -- (\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick, draw=black] (ATT) -- (0,-3*\graphLineSpacing) {}; 
+	\draw[thick, dotted] (0,-3*\graphLineSpacing) -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture}
+=
+\sum_{\substack{i_1,i_2,\cdots,i_n\\ \sum_{k=1}^{n}{i_k} =t}}
+{t \choose {i_1,i_2,\cdots,i_n}}
+\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A_{0}$] (AT) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$X_1$] (X10) at (0 + 2*\graphLineSpacing,0) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$X_1$] (X11) at (0 + 6*\graphLineSpacing,0) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$X_2$] (X20) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$X_2$] (X21) at (0 + 6*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$X_n$] (XN0) at (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$X_n$] (XN1) at (0 + 6*\graphLineSpacing,-5*\graphLineSpacing) {};
+
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+	\node (i1) at (0 + 4*\graphLineSpacing,0) {$i_1$};
+	\node (i2) at (0 + 4*\graphLineSpacing,-2*\graphLineSpacing) {$i_2$};
+	\node (in) at (0 + 4*\graphLineSpacing,-5*\graphLineSpacing) {$i_n$};
+
+	\draw[thick, draw=black] (AT) -- (0,0) -- (0 + \graphLineSpacing,0) {};
+	\draw[thick, dotted] (0 + \graphLineSpacing,0) -- (X10) -- (i1) -- (X11) -- (0 + 7*\graphLineSpacing,0) {};
+	\draw[thick, draw=black] (0 + 7*\graphLineSpacing,0) -- (0 + 8*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black] (AT) -- (0 + \graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick, dotted] (0 + \graphLineSpacing,-2*\graphLineSpacing) -- (X20) -- (i2) -- (X21) -- (0 + 7*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick, draw=black] (0 + 7*\graphLineSpacing,-2*\graphLineSpacing) -- (0 + 8*\graphLineSpacing,-2*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (0,-3*\graphLineSpacing);
+	\draw[thick, dotted] (0,-3*\graphLineSpacing)  -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (0 + \graphLineSpacing,-5*\graphLineSpacing) {};
+	\draw[thick, dotted] (0 + \graphLineSpacing,-5*\graphLineSpacing) -- (XN0) -- (in) -- (XN1) -- (0 + 7*\graphLineSpacing,-5*\graphLineSpacing) {};
+	\draw[thick, draw=black] (0 + 7*\graphLineSpacing,-5*\graphLineSpacing) -- (0 + 8*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture}
+\]

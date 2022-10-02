@@ -1,0 +1,55 @@
+\[ A_t = 
+\left(
+\left(
+\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A_{0}$] (AT) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$Q_{X_1}$] (X10) at (0 + 2*\graphLineSpacing,0) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$Q_{X_2}$] (X20) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$Q_{X_n}$] (XN0) at (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+
+	\draw[thick, draw=black] (AT) -- (0,0) -- (0 + \graphLineSpacing,0) -- (X10) -- (0 + 3*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black] (AT) -- (0 + \graphLineSpacing,-2*\graphLineSpacing) -- (X20) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing){};
+
+	\draw[thick, draw=black] (AT) -- (0,-3*\graphLineSpacing);
+	\draw[thick, dotted] (0,-3*\graphLineSpacing)  -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (0 + \graphLineSpacing,-5*\graphLineSpacing) -- (XN0) -- (0 + 3*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture}
+\right)
+\circ
+\left(
+\sum_{k=1}^n
+	\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$I$] (I) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_{X_k}$] (X2) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-2*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-2*\graphLineSpacing - 0.2) {};
+
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+	\draw[thick, draw=black] (AT) -- (0,0) --  (0 + 2*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black, label=above:] (AT) -- node [above] {$k$} (X2) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (0,-2.5*\graphLineSpacing) {}; 
+	\draw[thick, dotted] (0,-2.5*\graphLineSpacing)  -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (0 + \graphLineSpacing,-5*\graphLineSpacing) -- (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture} 
+\right)^{\circ t}
+\right)
+\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$Q^{-1}_{X_1}$] (X10) at (0 + 2*\graphLineSpacing,0) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$Q^{-1}_{X_2}$] (X20) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myBrown,label=above right:$Q^{-1}_{X_n}$] (XN0) at (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (0,0) -- (X10) -- (0 + 3*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black] (0,-2*\graphLineSpacing) -- (X20) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing){};
+
+	\draw[thick, dotted] (0,-3.5*\graphLineSpacing) -- ( 3*\graphLineSpacing,-3.5*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (0,-5*\graphLineSpacing) -- (XN0) -- (0 + 3*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture}
+\]

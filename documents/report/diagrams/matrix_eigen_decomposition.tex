@@ -1,0 +1,97 @@
+\renewcommand{\gridCellWidth}{0.3}
+\renewcommand{\gridSize}{7}
+\renewcommand{\gridSpacing}{0.9}
+\renewcommand{\gridWidth}{\gridSize*\gridCellWidth}
+\renewcommand{\gridAxisHorizontalCellColour}{myGreen}
+\renewcommand{\gridAxisVerticalCellColour}{myOrange}
+\renewcommand{\gridAxisMiddleColour}{myYellow}
+\renewcommand{\gridTwoStart}{\gridSpacing}
+\renewcommand{\gridThreeStart}{\gridTwoStart + \gridWidth + \gridSpacing}
+
+
+
+\begin{tikzpicture}[every node/.style={minimum size=\gridCellWidth cm-\pgflinewidth, outer sep=0pt}]
+
+%Grid 1
+
+\node at (\gridSpacing/2,3.5*\gridCellWidth) {\large $X =$};
+
+%Grid 2
+
+\draw[step=\gridCellWidth cm,color=black] (\gridTwoStart,0) grid (\gridWidth + \gridTwoStart,\gridWidth);
+
+
+
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 0.5*\gridCellWidth,5.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 1.5*\gridCellWidth,4.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 2.5*\gridCellWidth,3.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 3.5*\gridCellWidth,2.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 4.5*\gridCellWidth,1.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 5.5*\gridCellWidth,0.5*\gridCellWidth) {};
+
+\node at (\gridTwoStart + 0.5*\gridCellWidth,5.5*\gridCellWidth) {\footnotesize x1};
+\node at (\gridTwoStart + 1.5*\gridCellWidth,4.5*\gridCellWidth) {\footnotesize x1};
+\node at (\gridTwoStart + 2.5*\gridCellWidth,3.5*\gridCellWidth) {\footnotesize x1};
+\node at (\gridTwoStart + 3.5*\gridCellWidth,2.5*\gridCellWidth) {\footnotesize x1};
+\node at (\gridTwoStart + 4.5*\gridCellWidth,1.5*\gridCellWidth) {\footnotesize x1};
+\node at (\gridTwoStart + 5.5*\gridCellWidth,0.5*\gridCellWidth) {\footnotesize x1};
+
+
+\node[fill={\gridAxisMiddleColour}] at (\gridTwoStart + 0.5*\gridCellWidth,6.5*\gridCellWidth){};
+\node[fill={\gridAxisMiddleColour}] at (\gridTwoStart + 1.5*\gridCellWidth,5.5*\gridCellWidth){};
+\node[fill={\gridAxisMiddleColour}] at (\gridTwoStart + 2.5*\gridCellWidth,4.5*\gridCellWidth){};
+\node[fill={\gridAxisMiddleColour}] at (\gridTwoStart + 3.5*\gridCellWidth,3.5*\gridCellWidth){};
+\node[fill={\gridAxisMiddleColour}] at (\gridTwoStart + 4.5*\gridCellWidth,2.5*\gridCellWidth){};
+\node[fill={\gridAxisMiddleColour}] at (\gridTwoStart + 5.5*\gridCellWidth,1.5*\gridCellWidth){};
+\node[fill={\gridAxisMiddleColour}] at (\gridTwoStart + 6.5*\gridCellWidth,0.5*\gridCellWidth){};
+
+\node at (\gridTwoStart + 0.5*\gridCellWidth,6.5*\gridCellWidth) {\tiny{$\frac{\text{m}}{n}$} };
+\node at (\gridTwoStart + 1.5*\gridCellWidth,5.5*\gridCellWidth) {\tiny{$\frac{\text{m}}{n}$} };
+\node at (\gridTwoStart + 2.5*\gridCellWidth,4.5*\gridCellWidth) {\tiny{$\frac{\text{m}}{n}$} };
+\node at (\gridTwoStart + 3.5*\gridCellWidth,3.5*\gridCellWidth) {\tiny{$\frac{\text{m}}{n}$} };
+\node at (\gridTwoStart + 4.5*\gridCellWidth,2.5*\gridCellWidth) {\tiny{$\frac{\text{m}}{n}$} };
+\node at (\gridTwoStart + 5.5*\gridCellWidth,1.5*\gridCellWidth) {\tiny{$\frac{\text{m}}{n}$} };
+\node at (\gridTwoStart + 6.5*\gridCellWidth,0.5*\gridCellWidth) {\tiny{$\frac{\text{m}}{n}$} };
+
+
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 1.5*\gridCellWidth,6.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 2.5*\gridCellWidth,5.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 3.5*\gridCellWidth,4.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 4.5*\gridCellWidth,3.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 5.5*\gridCellWidth,2.5*\gridCellWidth) {};
+\node[fill={\gridAxisHorizontalCellColour}] at (\gridTwoStart + 6.5*\gridCellWidth,1.5*\gridCellWidth) {};
+
+\node at (\gridTwoStart + 1.5*\gridCellWidth,6.5*\gridCellWidth) {\footnotesize x2};
+\node at (\gridTwoStart + 2.5*\gridCellWidth,5.5*\gridCellWidth) {\footnotesize x2};
+\node at (\gridTwoStart + 3.5*\gridCellWidth,4.5*\gridCellWidth) {\footnotesize x2};
+\node at (\gridTwoStart + 4.5*\gridCellWidth,3.5*\gridCellWidth) {\footnotesize x2};
+\node at (\gridTwoStart + 5.5*\gridCellWidth,2.5*\gridCellWidth) {\footnotesize x2};
+\node at (\gridTwoStart + 6.5*\gridCellWidth,1.5*\gridCellWidth) {\footnotesize x2};
+
+
+%Grid 3
+
+\draw[step=\gridCellWidth cm,color=black] (\gridThreeStart,0) grid (\gridWidth + \gridThreeStart,\gridWidth);
+
+\node[fill={myGrey}] at (\gridThreeStart + 1.5*\gridCellWidth,5.5*\gridCellWidth){};
+\node[fill={myGrey}] at (\gridThreeStart + 0.5*\gridCellWidth,6.5*\gridCellWidth){};
+\node[fill={myGrey}] at (\gridThreeStart + 2.5*\gridCellWidth,4.5*\gridCellWidth){};
+\node[fill={myGrey}] at (\gridThreeStart + 3.5*\gridCellWidth,3.5*\gridCellWidth){};
+\node[fill={myGrey}] at (\gridThreeStart + 4.5*\gridCellWidth,2.5*\gridCellWidth){};
+\node[fill={myGrey}] at (\gridThreeStart + 5.5*\gridCellWidth,1.5*\gridCellWidth){};
+\node[fill={myGrey}] at (\gridThreeStart + 6.5*\gridCellWidth,0.5*\gridCellWidth){};
+
+\node at (\gridThreeStart + 0.5*\gridCellWidth,6.5*\gridCellWidth) {\tiny{$\lambda_1$} };
+\node at (\gridThreeStart + 1.5*\gridCellWidth,5.5*\gridCellWidth) {\tiny{$\lambda_2$} };
+\node at (\gridThreeStart + 2.5*\gridCellWidth,4.5*\gridCellWidth) {\tiny{$\lambda_3$} };
+\node at (\gridThreeStart + 3.5*\gridCellWidth,3.5*\gridCellWidth) {\tiny{$\lambda_4$} };
+\node at (\gridThreeStart + 4.5*\gridCellWidth,2.5*\gridCellWidth) {\tiny{$\lambda_5$} };
+\node at (\gridThreeStart + 5.5*\gridCellWidth,1.5*\gridCellWidth) {\tiny{$\lambda_6$} };
+\node at (\gridThreeStart + 6.5*\gridCellWidth,0.5*\gridCellWidth) {\tiny{$\lambda_7$} };
+
+
+%in between
+\node at (\gridTwoStart + \gridWidth + \gridSpacing/2 ,3.5*\gridCellWidth){$=Q\cdot$};
+\node at (\gridThreeStart + \gridWidth + \gridSpacing/2 ,3.5*\gridCellWidth){$\cdot Q^{-1}$};
+% transpose
+\end{tikzpicture}

@@ -13,8 +13,11 @@
 *.log
 *.pdf
 *.synctex.gz
+*.synctex(busy)
 *.fd
 *.bbl
 *.bcf
 *.blg
 *.run.xml
+*.out 
+*pdf*

@@ -1,0 +1,84 @@
+\renewcommand{\graphTensorSpacing}{1}
+
+\newcommand{\innerSum}{C}
+\newcommand{\verticalBasis}{{X_V}}
+\newcommand{\verticalEigens}{{\Lambda_V}}
+\newcommand{\horizontalBasis}{{X_H}}
+\newcommand{\horizontalEigens}{{\Lambda_H}}
+\newcommand{\transformedSourceGrid}{A} 
+ For the ND case in tensor form where $I$ is a tensor full of $1$s
+\[
+\sum_{\substack{i_1,i_2,\cdots,i_n\\ \sum_{k=1}^{n}{i_k} =t}}
+\left(
+{t \choose {i_1,i_2,\cdots,i_n}}
+\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$A$] (AT) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$(\Lambda_1)^{i_1}$] (X1) at (0 + 2*\graphLineSpacing,0) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,0 + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,0 - 0.2) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$(\Lambda_2)^{i_2}$] (X2) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-2*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-2*\graphLineSpacing - 0.2) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$(\Lambda_n)^{i_n}$] (XN0) at (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-5*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-5*\graphLineSpacing - 0.2) {};
+
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+	\draw[thick, draw=black] (AT) -- (0,0) -- (X1) -- (0 + 3*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black] (AT) -- (X2) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (0,-2.5*\graphLineSpacing) {}; 
+	\draw[thick, dotted] (0,-2.5*\graphLineSpacing)  -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (0 + \graphLineSpacing,-5*\graphLineSpacing) -- (XN0)  -- (0 + 3*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture}
+\right)
+\equiv
+A
+\circ
+\left(
+\sum_{k=1}^n
+\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$I$] (I) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_{k}$] (X2) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-2*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-2*\graphLineSpacing - 0.2) {};
+
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+	\draw[thick, draw=black] (AT) -- (0,0) --  (0 + 2*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black, label=above:] (AT) -- node [above] {$k$} (X2) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (0,-2.5*\graphLineSpacing) {}; 
+	\draw[thick, dotted] (0,-2.5*\graphLineSpacing)  -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (0 + \graphLineSpacing,-5*\graphLineSpacing) -- (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture}
+\right)^{\circ t}
+\] \\
+\[ A
+\circ
+\left(
+\sum_{k=1}^n
+	\begin{tikzpicture}[baseline=-7ex]s
+	\node[circle,draw=black!80,thick,fill=black,label=left:$I$] (I) at (0,-2*\graphLineSpacing) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above right:$\Lambda_{k}$] (X2) at (0 + 2*\graphLineSpacing,-2*\graphLineSpacing) {};
+	\draw[thick] (0 + 2*\graphLineSpacing - 0.2,-2*\graphLineSpacing + 0.2) -- (0 + 2*\graphLineSpacing + 0.2,-2*\graphLineSpacing - 0.2) {};
+
+	\node (n) at (0,-3.5*\graphLineSpacing){$n$};
+
+	\draw[thick, draw=black] (AT) -- (0,0) --  (0 + 2*\graphLineSpacing,0) {};
+
+	\draw[thick, draw=black, label=above:] (AT) -- node [above] {$k$} (X2) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) -- (0 + 3*\graphLineSpacing,-2*\graphLineSpacing) {};
+
+	\draw[thick, draw=black] (AT) -- (0,-2.5*\graphLineSpacing) {}; 
+	\draw[thick, dotted] (0,-2.5*\graphLineSpacing)  -- (n) -- (0,-4.5*\graphLineSpacing){};
+	\draw[thick, draw=black] (0,-4.5*\graphLineSpacing) -- (0,-5*\graphLineSpacing) -- (0 + \graphLineSpacing,-5*\graphLineSpacing) -- (0 + 2*\graphLineSpacing,-5*\graphLineSpacing) {};
+\end{tikzpicture} \right)^{\circ t}_{i_1, i_2, \cdots, i_n}
+\equiv A_{i_1, i_2, \cdots, i_n} \left( \sum_{k=1}^{n} {(\Lambda_k)}_{i_k,i_k} \right)^t\]
+
+For the 2D case in matrix form
+\begin{flalign*}
+	({\sum_{k = 0}^t {t \choose k} \verticalEigens^{k} \transformedSourceGrid \horizontalEigens^{n-k}})_{i,j} &= \sum_{k = 0}^t {t \choose k} ({\verticalEigens_{i,i}})^{k} (\transformedSourceGrid_{i,j}) ({\horizontalEigens_{j,j}})^{t-k} && \text{Using the properties of diagonal matrices}\\
+	&= (\transformedSourceGrid_{i,j})  ({\horizontalEigens_{j,j}})^{t} \sum_{k = 0}^t {t \choose k} (\frac{\verticalEigens_{i,i}}{\horizontalEigens_{j,j}})^{k} &&\text{Pulling out the constant factors}\\
+	&= (\transformedSourceGrid_{i,j})  ({\horizontalEigens_{j,j}})^{t} (1 + \frac{\verticalEigens_{i,i}}{\horizontalEigens_{j,j}})^{t} &&\text{Simplifying using the binomial theorem}\\
+	&= (\transformedSourceGrid_{i,j})  ({\horizontalEigens_{j,j}}+ \verticalEigens_{i,i})^{t} &&\text{Canceling}\\
+\end{flalign*}
+\\

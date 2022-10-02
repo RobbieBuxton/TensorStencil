@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{caption}
+\usepackage{algpseudocode}
+\usepackage{amsfonts}
+\usepackage{accents}
+\usepackage{pgfplots}
+\usepackage{filecontents}  
+\usepackage{listings}
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+\begin{document}
+\begin{algorithm}[H]
+\caption{TensorStencil}\label{euclid}
+\begin{algorithmic}[1]
+\State $\textit{data}[n_1][n_2]..[n_k] \gets \cdots$ 
+\State $\textit{stencil}[k][2r+1] \gets \cdots$ \\
+\State $\textit{tensors}[k] = \texttt{convert\_stencil\_to\_transformations}(\textit{stencil})$
+\State $\textit{basis\_in}[k],\textit{eigen\_vals}[k], \textit{basis\_out}[k] = \texttt{eigen\_decompose}(\textit{tensors})$ \\
+\State $\textit{transformed\_data} = \texttt{tensor\_contract}(\textit{basis\_out},\textit{data})$ \\
+\For{$i_1 = 0; i_1 < n_1; i_1 \mathrel{+}= 1$}
+\For{$i_2 = 0; i_2 < n_2; i_2 \mathrel{+}= 1$}
+\State $\cdots$
+\For{$i_k = 0; i_k < n_k; i_k \mathrel{+}= 1$}
+\State $\textit{eigen\_scaled\_data}[i_1][i_2]\cdots[i_k] = $
+\State $\quad \textit{transformed\_data}[i_1][i_2]\cdots[i_k] \times $
+\State $\quad \quad (\textit{eigen\_vals}[0][i_1] + $
+\State $\quad \quad \textit{eigen\_vals}[1][i_2] + $
+\State $\quad \quad \cdots$
+\State $\quad \quad \textit{eigen\_vals}[k-1][i_k])^{\textit{time\_steps}}$
+\EndFor 
+\State $\cdots$
+\EndFor 
+\EndFor \\
+\State $\textit{result} = \texttt{tensor\_contract}(\textit{basis\_out},\textit{eigen\_scaled\_data})$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{filecontents*}{data1.csv}
+	Size,TensorStencil,Devito,Error
+	50,0.005018,0.007894,0.000002
+	100,0.02809,0.076949,0.000003
+	150,0.101568,0.205237,0.000006
+	200,0.237379,0.549409,0.000009
+	250,0.477033,1.323531,0.000012
+	300,0.845301,2.743135,0.000004
+	350,1.40546,5.197527,0.000045
+	400,2.103525,8.888937,0.000014
+	450,3.000352,14.547453,0.000027
+	500,4.309026,22.966639,0.000013
+	550,5.708703,34.023224,0.000044
+	600,7.549911,50.373158,0
+	650,10.571026,73.569817,0.000031
+	700,15.045691,108.983444,0.000016
+	750,16.388805,133.701202,0.000034
+	800,21.642071,177.168427,0.000028
+	850,24.640459,235.159698,0.000029
+	900,30.80517,297.78067,0.00003
+	950,38.120262,377.148132,0.000028
+	1000,44.858974,469.869049,0.000045
+\end{filecontents*}
+
+\begin{tikzpicture}
+	\begin{axis} [ymode=log,ymax = 1000,xmax = 1050, ylabel={time},xlabel={size and iterations},legend pos=south east]
+	\addplot table [x=Size,y=Devito, col sep=comma] {data1.csv};
+	\addplot table [x=Size,y=TensorStencil, col sep=comma] {data1.csv};
+	\addlegendentry{Devito}
+	\addlegendentry{Custom}
+	\end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+	\begin{axis} [ylabel={percent error},xlabel={size and iterations},legend pos=south east]
+	\addplot table [x=Size,y=Error, col sep=comma] {data1.csv};
+	\addlegendentry{L2 Norm }
+	\end{axis}
+\end{tikzpicture}
+
+\end{document} 

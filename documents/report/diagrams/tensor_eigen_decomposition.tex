@@ -1,0 +1,19 @@
+
+\renewcommand{\graphTensorSpacing}{1.1}
+\renewcommand{\graphTensorTwoStart}{2.25*\graphTensorSpacing}
+\[
+\begin{tikzpicture}[baseline=-0.65ex]
+	\node[circle,draw=black!80,thick,fill=myGreen,label=above:$X$] (X) at (0,0) {};
+	\draw[thick, draw=black] (-\graphLineSpacing,0) -- (X) -- (\graphLineSpacing,0) {};
+\end{tikzpicture}
+=
+\begin{tikzpicture}[baseline=-0.65ex]
+	\node[circle,draw=black!80,thick,fill=black,label=above:$Q_X$] (Q) at (0,0) {};
+	\node[circle,draw=black!80,thick,fill=myGrey,label=above:$\Lambda_X$] (LAMBDA) at (\graphTensorSpacing,0) {};
+	\draw[thick] (\graphTensorSpacing - 0.2,0 + 0.2) -- (\graphTensorSpacing + 0.2,0 - 0.2) {};
+	\node[circle,draw=black!80,thick,fill=black,label=above:$Q_X^{-1}$] (Q1) at (2*\graphTensorSpacing,0) {};
+
+	\draw[thick, draw=black] (-\graphLineSpacing,0) -- (Q) -- (LAMBDA) -- (Q1) -- (2*\graphTensorSpacing + \graphLineSpacing,0) {};
+
+\end{tikzpicture}
+\]

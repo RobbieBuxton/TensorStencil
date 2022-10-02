@@ -54,19 +54,34 @@ struct tensor *tensor_contraction(struct tensor *tensor_a, int index_a, struct t
 	int array_size = pow(n, new_dimension);
 
 	cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans, n, n*n, n, 1.0, tensor_a->array, n, tensor_b->array, n, 0.0, result->array, n*n);
+	//cblas_ssymm(CblasColMajor,CblasLeft, CblasUpper, n, n*n, 1.0, tensor_a->array, n, tensor_b->array, n, 0.0, result->array, n);
+
+/* void cblas_ssymm(OPENBLAS_CONST enum CBLAS_ORDER Order,
+										OPENBLAS_CONST enum CBLAS_SIDE Side,
+										OPENBLAS_CONST enum CBLAS_UPLO Uplo,
+										OPENBLAS_CONST blasint M, 
+										OPENBLAS_CONST blasint N,
+										OPENBLAS_CONST float alpha, 
+										OPENBLAS_CONST float *A, 
+										OPENBLAS_CONST blasint lda, 
+										OPENBLAS_CONST float *B, 
+										OPENBLAS_CONST blasint ldb, 
+										OPENBLAS_CONST float beta, 
+										float *C, 
+										OPENBLAS_CONST blasint ldc); */
 
 	// for (int i = 0; i < array_size; i++)
 	// {
 	// 	int a_start = gen_index(n, index_a, i / (int)pow(n, tensor_b->dimension - 1));
 	// 	int b_start = gen_index(n, index_b, i % (int)pow(n, tensor_b->dimension - 1));
-	// 	// printf("array[%d] = sdot(%d,a[%d],%d,b[%d],%d)\n",i,n,a_start,spacing_a,b_start,spacing_b);
+	// 	printf("array[%d] = sdot(%d,a[%d],%d,b[%d],%d)\n",i,n,a_start,spacing_a,b_start,spacing_b);
 	// 	result->array[i] =sdot_(&n,
 	// 			&tensor_a->array[a_start],
 	// 			&spacing_a,
 	// 			&tensor_b->array[b_start],
 	// 			&spacing_b);
 	// }
-	
+
 	return result;
 }
 
